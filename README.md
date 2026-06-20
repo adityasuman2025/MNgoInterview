@@ -2,7 +2,7 @@
 
 
 ## Web App
-[quiz.mngo.in](https://quiz.mngo.in)
+[interview.adityas.site](https://interview.adityas.site)
 
 
 ## Brief:
