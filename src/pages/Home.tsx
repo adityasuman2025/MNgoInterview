@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect, useMemo, useCallback } from "react";
 import getLogoImg from "mngo-project-tools/getLogoImg";
 import FullScreenLoader from "mngo-project-tools/comps/FullScreenLoader";
-import { PROJECT_NAME } from '../constants';
+import { PROJECT_NAME, MACHINE_CODING_FILE_LOCATION } from '../constants';
 import { QuizListItem } from '../comps';
 import { getInterviewData } from '../utils';
 
@@ -18,6 +18,10 @@ function Home() {
     // Stable navigate handler factory — memoized per key via the closure over topics
     const makeNavigateHandler = useCallback((key: string) => () => {
         window.location.href = `/quiz/${key}`;
+    }, []);
+
+    const handleMachineCodingClick = useCallback(() => {
+        window.open(MACHINE_CODING_FILE_LOCATION, "_blank");
     }, []);
 
     if (topicList === null) {
@@ -46,7 +50,7 @@ function Home() {
                 <nav aria-label="Interview topics" className="mngo-w-full mngo-max-w-lg">
                     <ul
                         className="mngo-list-none"
-                        aria-label={`${topics.length} topics available`}
+                        aria-label={`${topics.length + 1} topics available`}
                     >
                         {topics.map((key: string, idx) => (
                             <QuizListItem
@@ -55,6 +59,10 @@ function Home() {
                                 onClick={makeNavigateHandler(key)}
                             />
                         ))}
+                        <QuizListItem
+                            quizTitle="Machine Coding"
+                            onClick={handleMachineCodingClick}
+                        />
                     </ul>
                 </nav>
             </div>
