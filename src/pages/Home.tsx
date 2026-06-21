@@ -27,7 +27,7 @@ function Home() {
     if (topicList === null) {
         return (
             <FullScreenLoader styles={{ loaderClassName: "mngo-loader" }}>
-                <h2 className="mngo-mt-4">MNgo Interview</h2>
+                <h2 className="mngo-mt-4">MNgo Interview Prep</h2>
             </FullScreenLoader>
         );
     }
@@ -37,7 +37,7 @@ function Home() {
             <div className="mngo-max-w-3xl mngo-mx-auto mngo-w-full mngo-flex-1 mngo-flex mngo-flex-col mngo-justify-center mngo-items-center">
                 <header className="mngo-flex mngo-flex-col mngo-items-center">
                     <div className="mngo-inline-flex mngo-items-center mngo-justify-center mngo-p-4 mngo-rounded-3xl mngo-bg-white/5 mngo-border mngo-border-white/10 mngo-shadow-2xl mngo-mb-6 mngo-backdrop-blur-md">
-                        <img src={getLogoImg()} alt="MNgo Interview logo" width={72} height={72} className="mngo-object-contain" />
+                        <img src={getLogoImg()} alt="MNgo Interview Prep logo" width={72} height={72} className="mngo-object-contain" />
                     </div>
                     <h1 className="mngo-text-3xl md:mngo-text-5xl mngo-font-extrabold mngo-tracking-tight mngo-text-transparent mngo-bg-clip-text mngo-bg-gradient-to-r mngo-from-indigo-400 mngo-via-purple-400 mngo-to-pink-500 mngo-mb-3">
                         {PROJECT_NAME}
