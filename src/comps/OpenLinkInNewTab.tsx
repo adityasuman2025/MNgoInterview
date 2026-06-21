@@ -1,21 +1,20 @@
-import { useState, useEffect } from "react";
+import { useMemo, memo } from "react";
 
-export default function OpenLinkInNewTab({
+function OpenLinkInNewTab({
     htmlString = "",
 }: {
     htmlString: string
 }) {
-    const [modifiedHtmlString, setModifiedHtmlString] = useState<string>("");
-
-    useEffect(() => {
+    // Compute modified HTML directly — no state or effect needed
+    const modifiedHtmlString = useMemo(() => {
+        if (!htmlString) return "";
         const dummyEle = document.createElement('div');
         dummyEle.innerHTML = htmlString;
-
-        const allLinksInsideContent = dummyEle.querySelectorAll('a');
-        allLinksInsideContent.forEach((link) => link.setAttribute('target', '_blank'));
-
-        setModifiedHtmlString(dummyEle.innerHTML);
+        dummyEle.querySelectorAll('a').forEach((link) => link.setAttribute('target', '_blank'));
+        return dummyEle.innerHTML;
     }, [htmlString]);
 
-    return <div dangerouslySetInnerHTML={{ __html: modifiedHtmlString }} />
+    return <div dangerouslySetInnerHTML={{ __html: modifiedHtmlString }} />;
 }
+
+export default memo(OpenLinkInNewTab);

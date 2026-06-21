@@ -1,28 +1,13 @@
-import { useEffect, memo, Suspense, lazy } from "react";
+import { memo, Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import FullScreenLoader from "mngo-project-tools/comps/FullScreenLoader";
-import { appCounter } from "./apis";
 
 //lazy loading split the main bundle into many chunks
 const Home = lazy(() => import('./pages/Home'));
 const Quiz = lazy(() => import('./pages/Quiz'));
-const AdminLogin = lazy(() => import('./pages/AdminLogin'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 function Routes() {
-    useEffect(() => {
-        appCounter();
-    }, []);
-
     const router = createBrowserRouter([
-        {
-            path: "/admin",
-            element: <AdminLogin />,
-        },
-        {
-            path: "/admin-dashboard",
-            element: <AdminDashboard />,
-        },
         {
             path: "/quiz/:quizName",
             element: <Quiz />,

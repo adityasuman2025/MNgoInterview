@@ -1,3 +1,37 @@
+import { INTERVIEW_DATA_KEY } from './constants';
+
+/**
+ * Always fetches and parses /WebTech.html so the data is always up-to-date.
+ * Stores the fresh result in localStorage after every parse.
+ */
+export async function getInterviewData(): Promise<{ [key: string]: any }> {
+    try {
+        const response = await fetch("/WebTech.html");
+        const htmlText = await response.text();
+
+        // Parse the HTML string into a DOM tree
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
+        const body = doc.body;
+
+        const parsed = htmlToObject(body);
+
+        // Only overwrite cache when we got real data — never wipe a good cache with an empty result
+        if (Object.keys(parsed).length > 0) {
+            localStorage.setItem(INTERVIEW_DATA_KEY, JSON.stringify(parsed));
+        } else {
+            throw Error;
+        }
+
+        return parsed;
+    } catch {
+        // Fetch or parse failed — return last known good data from localStorage
+        const cached = localStorage.getItem(INTERVIEW_DATA_KEY);
+        if (cached) return JSON.parse(cached);
+        return {};
+    }
+}
+
 export function htmlToObject(htmlContent: HTMLElement) {
     const TITLE_IDENTIFIER = ["title"]; // classes that identify a title
     const QSTN_IDENTIFIER = ["h1"]; // tags that identify a question
@@ -34,15 +68,6 @@ export function htmlToObject(htmlContent: HTMLElement) {
     }
 
     return json;
-}
-
-export function objectToFile(obj: { [key: string]: any }) {
-    const jsonString = JSON.stringify(obj);
-
-    const blob = new Blob([jsonString], { type: 'application/json' }); // Create a Blob from the JSON string
-    const file = new File([blob], 'data.json', { type: 'application/json' }); // Create a file from the Blob
-
-    return file;
 }
 
 export function shuffle(array: any[]) {
