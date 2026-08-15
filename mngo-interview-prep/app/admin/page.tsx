@@ -1,14 +1,15 @@
 "use client";
 
-import { useTheme } from "@/context/Theme";
+import { useToast } from "@/context/Toast";
 
 export default function Page() {
-    const { toogleTheme } = useTheme();
+    const toast = useToast();
 
     return (
         <main className="">
             admin
-            <button onClick={toogleTheme}>toogle</button>
+            <br />
+            <button className="px-4 py-2 bg-red-100" onClick={() => toast.success("hey man " + Date.now())}>toogle</button>
         </main>
     )
 }

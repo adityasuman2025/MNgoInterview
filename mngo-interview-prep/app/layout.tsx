@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import ThemeContextProvider from "@/context/Theme";
+import ToastProvider from "@/context/Toast";
 import { THEME_COLOR } from "@/constant";
 import "./globals.css";
 
@@ -139,7 +140,9 @@ export default function RootLayout({
             </head>
             <body className="bg-primary-gradient">
                 <ThemeContextProvider>
-                    {children}
+                    <ToastProvider>
+                        {children}
+                    </ToastProvider>
                 </ThemeContextProvider>
             </body>
         </html>

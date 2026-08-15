@@ -10,6 +10,12 @@
 
     --color-secondary: rgba(255, 255, 255, 0.3);
     --color-secondary-content: rgb(250, 250, 250);
+
+    --color-ternary: rgb(79, 70, 229);
+    --color-ternary-content: rgb(255, 255, 255);
+
+    --color-error: rgb(220, 38, 38);
+    --color-error-content: rgb(255, 255, 255);
 }
 
 [data-theme="dark"] {
@@ -22,14 +28,26 @@
 
     --color-secondary: rgba(255, 255, 255, 0.1);
     --color-secondary-content: rgb(250, 250, 250);
+
+    --color-ternary: rgb(30, 32, 54);
+    --color-ternary-content: rgb(240, 240, 240);
+
+    --color-error: rgb(153, 27, 27);
+    --color-error-content: rgb(254, 242, 242);
 }
 
 @theme {
     --color-primary: var(--color-primary);
-    --color-primary-foreground: var(--color-primary-foreground);
+    --color-primary-content: var(--color-primary-content);
 
     --color-secondary: var(--color-secondary);
-    --color-secondary-foreground: var(--color-secondary-foreground);
+    --color-secondary-content: var(--color-secondary-content);
+
+    --color-ternary: var(--color-ternary);
+    --color-ternary-content: var(--color-ternary-content);
+
+    --color-error: var(--color-error);
+    --color-error-content: var(--color-error-content);
 
     --background-image-primary-gradient: linear-gradient(135deg,
             var(--color-base-1) 0%,
