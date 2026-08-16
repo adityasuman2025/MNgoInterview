@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import ThemeContextProvider from "@/context/ThemeContext";
 import ToastProvider from "@/context/ToastContext";
-import LoginContextProvider from "@/context/LoginContext";
 import ReactQueryProvider from "@/context/ReactQueryContext";
 import { THEME_COLOR } from "@/constants";
 import { APP_NAME, BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
@@ -133,13 +133,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en" suppressHydrationWarning>
             <body className="bg-primary-gradient">
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
                 <ThemeContextProvider>
                     <ReactQueryProvider>
-                        <ToastProvider>
-                            <LoginContextProvider>
+                        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
+                            <ToastProvider>
                                 {children}
-                            </LoginContextProvider>
-                        </ToastProvider>
+                            </ToastProvider>
+                        </GoogleOAuthProvider>
                     </ReactQueryProvider>
                 </ThemeContextProvider>
             </body>

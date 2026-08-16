@@ -1,5 +1,6 @@
 import createApiClient, { API_METHODS } from "./client";
 import { COOKIES } from "@/constants";
+import type { getTopicsApiResp, AuthResponse } from "./types";
 
 const authApiClient = createApiClient({
     baseUrl: process.env.NEXT_PUBLIC_AUTH_API_BASE_URL || "",
@@ -11,35 +12,11 @@ const interviewApiClient = createApiClient({
     tokenKey: COOKIES.USER_TOKEN,
 });
 
-export interface TopicType {
-    "_id": string,
-    "slug": string,
-    "topicName": string,
-    "totalQuestions": number,
-    "completedQuestions": number,
-}
-export interface getTopicsApiResp {
-    data: TopicType[]
-}
 export function getTopicsApi(): Promise<getTopicsApiResp> {
     return interviewApiClient({
         path: "/topics",
         authRequired: false,
     });
-}
-
-export interface UserType {
-    _id: string;
-    name: string;
-    email: string;
-    authMethod: string;
-}
-export interface AuthResponse {
-    data: {
-        token: string;
-        user: UserType;
-    };
-    message?: string;
 }
 
 export function userLoginApi(data: { email: string; password: string }): Promise<AuthResponse> {
@@ -54,6 +31,19 @@ export function userLoginApi(data: { email: string; password: string }): Promise
 export function userSignupApi(data: { name: string; email: string; password: string }): Promise<AuthResponse> {
     return authApiClient({
         path: "/auth/signup",
+        authRequired: false,
+        method: API_METHODS.POST,
+        body: data,
+    });
+}
+
+export function getUserDetailsApi(): Promise<AuthResponse> {
+    return authApiClient({ path: "/auth/me" });
+}
+
+export function googleAuthApi(data: { idToken: string }): Promise<AuthResponse> {
+    return authApiClient({
+        path: "/auth/login/google",
         authRequired: false,
         method: API_METHODS.POST,
         body: data,

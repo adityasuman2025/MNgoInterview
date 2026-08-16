@@ -5,14 +5,14 @@ import { Upload } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import Button from "@/components/shared/Button";
 import { useToast } from "@/context/ToastContext";
-import { uploadHTMLFileAPI } from "@/apis/admin";
+import { uploadHTMLFileApi } from "@/apis/admin";
 
 export default function AdminUploadDataForm() {
     const toast = useToast();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const uploadMutation = useMutation({
-        mutationFn: uploadHTMLFileAPI,
+        mutationFn: uploadHTMLFileApi,
         onSuccess: (resp) => toast.success(resp?.message || "File uploaded successfully!"),
         onError: (err) => toast.error(err.message || "Failed to upload file")
     });
@@ -36,7 +36,6 @@ export default function AdminUploadDataForm() {
     }
 
     return (
-
         <div className="w-48 md:w-64">
             <input ref={fileInputRef} type="file" accept=".html,text/html" className="hidden" onChange={handleFileChange} />
 
@@ -50,6 +49,5 @@ export default function AdminUploadDataForm() {
                 upload .html file
             </Button>
         </div>
-
     );
 }

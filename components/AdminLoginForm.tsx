@@ -1,6 +1,6 @@
 "use client";
 
-import { type SubmitEvent } from "react";
+import { useCallback, type SubmitEvent } from "react";
 import validator from "validator";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -8,27 +8,31 @@ import Cookies from "js-cookie";
 import { useToast } from "@/context/ToastContext";
 import Input from "@/components/shared/Input";
 import Button from "@/components/shared/Button";
-import { adminLoginAPI } from "@/apis/admin";
+import { adminLoginApi, adminGoogleAuthApi } from "@/apis/admin";
 import { COOKIES } from "@/constants";
 import { ROUTES } from "@/constants/routes";
+import GoogleButton from "./shared/GoogleButton";
 
 export default function AdminLoginForm() {
     const router = useRouter();
     const toast = useToast();
 
     const loginMutation = useMutation({
-        mutationFn: adminLoginAPI,
+        mutationFn: adminLoginApi,
         onSuccess: (resp) => {
             const token = resp?.data?.token;
-            if (token) {
-                Cookies.set(COOKIES.ADMIN_TOKEN, token);
-                router.replace(ROUTES.ADMIN.DASHBOARD);
-            } else toast.error("token is missing");
+            if (token) handleLoginSuccess(token)
+            else toast.error("token is missing");
         },
         onError: (err) => toast.error(err.message)
     });
 
-    async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
+    const handleLoginSuccess = useCallback((token: string) => {
+        Cookies.set(COOKIES.ADMIN_TOKEN, token);
+        router.replace(ROUTES.ADMIN.DASHBOARD);
+    }, [router])
+
+    async function handleFormSubmit(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const formData = new FormData(e.target as HTMLFormElement);
@@ -43,7 +47,7 @@ export default function AdminLoginForm() {
     }
 
     return (
-        <form className="flex flex-col items-center justify-center gap-5 w-74 md:w-100" onSubmit={handleSubmit}>
+        <form className="flex flex-col items-center justify-center gap-5 w-74 md:w-100" onSubmit={handleFormSubmit}>
             <Input
                 name="email"
                 autoFocus
@@ -58,6 +62,8 @@ export default function AdminLoginForm() {
             <Button className="w-full" loading={loginMutation.isPending}>
                 login
             </Button>
+
+            <GoogleButton mutationFunction={adminGoogleAuthApi} onSuccess={handleLoginSuccess} />
         </form>
     );
 }

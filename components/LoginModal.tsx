@@ -1,15 +1,19 @@
-import { memo, useState, type SubmitEvent } from "react";
+import { memo, type SubmitEvent } from "react";
 import validator from "validator";
 import { useMutation } from "@tanstack/react-query";
 import Modal from "./shared/Modal";
 import Button, { BUTTON_VARIANTS } from "./shared/Button";
 import Input from "./shared/Input";
+import Tabs from "./shared/Tabs";
 import GoogleButton from "./shared/GoogleButton";
 import { useToast } from "@/context/ToastContext";
-import { userLoginApi, userSignupApi } from "@/apis/user";
-import type { UserType } from "@/apis/user";
+import { userLoginApi, userSignupApi, googleAuthApi } from "@/apis/user";
+import type { UserType } from "@/apis/types";
 
-type AuthTab = "LOGIN" | "SIGNUP";
+const AUTH_TABS = {
+    LOGIN: "LOGIN",
+    SIGNUP: "SIGNUP",
+} as const;
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -17,20 +21,14 @@ interface LoginModalProps {
     onLoginSuccess?: (token: string, user: UserType) => void;
 }
 function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
-    const [activeTab, setActiveTab] = useState<AuthTab>("LOGIN");
     const toast = useToast();
 
     const loginMutation = useMutation({
         mutationFn: userLoginApi,
         onSuccess: (resp) => {
             const { token, user } = resp?.data || {};
-            if (token) {
-                onLoginSuccess?.(token, user);
-                toast.success("Logged in successfully");
-                onClose();
-            } else {
-                toast.error("Token is missing in response");
-            }
+            if (token) handleLoginSuccess(token, user)
+            else toast.error("Token is missing in response");
         },
         onError: (err: Error) => toast.error(err.message),
     });
@@ -39,14 +37,8 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
         mutationFn: userSignupApi,
         onSuccess: (resp) => {
             const { token, user } = resp?.data || {};
-            if (token) {
-                onLoginSuccess?.(token, user);
-                toast.success("Account created successfully");
-                onClose();
-            } else {
-                toast.success("Account created! Please log in.");
-                setActiveTab("LOGIN");
-            }
+            if (token) handleLoginSuccess(token, user)
+            else toast.success("Account created! Please log in.");
         },
         onError: (err: Error) => toast.error(err.message),
     });
@@ -80,70 +72,80 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
         signupMutation.mutate({ name, email, password });
     }
 
-    function handleGoogleLogin() {
-        console.log("Continue with Google clicked");
+    function handleLoginSuccess(token: string, user: UserType) {
+        onLoginSuccess?.(token, user);
+        toast.success("logged in successfully");
+        onClose();
     }
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <Modal.ModalHeader>
-                <div className="grid grid-cols-2 gap-2 p-1 bg-ternary rounded-xl mb-4">
-                    <Button
-                        type="button"
-                        variant={BUTTON_VARIANTS.SECONDARY}
-                        onClick={() => setActiveTab("LOGIN")}
-                        className={`w-full py-2 font-semibold text-sm transition-all ${activeTab === "LOGIN"
-                            ? "!bg-secondary !text-secondary-content shadow-sm"
-                            : "!bg-transparent text-secondary-content/60 hover:text-secondary-content"
-                            }`}
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        type="button"
-                        variant={BUTTON_VARIANTS.SECONDARY}
-                        onClick={() => setActiveTab("SIGNUP")}
-                        className={`w-full py-2 font-semibold text-sm transition-all ${activeTab === "SIGNUP"
-                            ? "!bg-secondary !text-secondary-content shadow-sm"
-                            : "!bg-transparent text-secondary-content/60 hover:text-secondary-content"
-                            }`}
-                    >
-                        Sign Up
-                    </Button>
-                </div>
-            </Modal.ModalHeader>
+            <Tabs defaultTabId={AUTH_TABS.LOGIN}>
+                <Modal.Header>
+                    <div className="grid grid-cols-2 gap-2 p-1 bg-ternary rounded-xl mb-4">
+                        <Tabs.Tab id={AUTH_TABS.LOGIN}>
+                            {(isActive) => (
+                                <Button
+                                    variant={BUTTON_VARIANTS.SECONDARY}
+                                    className={`w-full py-2 font-semibold text-sm transition-all ${isActive
+                                        ? "!bg-secondary !text-secondary-content shadow-sm"
+                                        : "!bg-transparent text-secondary-content/60 hover:text-secondary-content"
+                                        }`}
+                                >
+                                    Login
+                                </Button>
+                            )}
+                        </Tabs.Tab>
+                        <Tabs.Tab id={AUTH_TABS.SIGNUP}>
+                            {(isActive) => (
+                                <Button
+                                    variant={BUTTON_VARIANTS.SECONDARY}
+                                    className={`w-full py-2 font-semibold text-sm transition-all ${isActive
+                                        ? "!bg-secondary !text-secondary-content shadow-sm"
+                                        : "!bg-transparent text-secondary-content/60 hover:text-secondary-content"
+                                        }`}
+                                >
+                                    Sign Up
+                                </Button>
+                            )}
+                        </Tabs.Tab>
+                    </div>
+                </Modal.Header>
 
-            <Modal.ModalBody>
-                {activeTab === "LOGIN" ? (
-                    <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
-                        <Input name="email" type="text" placeholder="Email" autoFocus required />
-                        <Input name="password" type="password" placeholder="Password" required />
+                <Modal.Body>
+                    <Tabs.Panel tabId={AUTH_TABS.LOGIN}>
+                        <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
+                            <Input name="email" type="text" placeholder="Email" autoFocus required />
+                            <Input name="password" type="password" placeholder="Password" required />
 
-                        <Button type="submit" loading={loginMutation.isPending} className="w-full mt-2">
-                            Login
-                        </Button>
-                    </form>
-                ) : (
-                    <form onSubmit={handleSignupSubmit} className="flex flex-col gap-4">
-                        <Input name="name" type="text" placeholder="Full Name" autoFocus required />
-                        <Input name="email" type="text" placeholder="Email" required />
-                        <Input name="password" type="password" placeholder="Password" required />
-                        <Input name="confirmPassword" type="password" placeholder="Confirm Password" required />
+                            <Button type="submit" loading={loginMutation.isPending} className="w-full mt-2">
+                                Login
+                            </Button>
+                        </form>
+                    </Tabs.Panel>
 
-                        <Button type="submit" loading={signupMutation.isPending} className="w-full mt-2">
-                            Sign Up
-                        </Button>
-                    </form>
-                )}
+                    <Tabs.Panel tabId={AUTH_TABS.SIGNUP}>
+                        <form onSubmit={handleSignupSubmit} className="flex flex-col gap-4">
+                            <Input name="name" type="text" placeholder="Full Name" autoFocus required />
+                            <Input name="email" type="text" placeholder="Email" required />
+                            <Input name="password" type="password" placeholder="Password" required />
+                            <Input name="confirmPassword" type="password" placeholder="Confirm Password" required />
 
-                <div className="flex items-center gap-3 my-4">
-                    <div className="flex-1 h-px bg-base-3" />
-                    <span className="text-xs uppercase text-secondary-content/50 font-medium">or</span>
-                    <div className="flex-1 h-px bg-base-3" />
-                </div>
+                            <Button type="submit" loading={signupMutation.isPending} className="w-full mt-2">
+                                Sign Up
+                            </Button>
+                        </form>
+                    </Tabs.Panel>
 
-                <GoogleButton onClick={handleGoogleLogin} />
-            </Modal.ModalBody>
+                    <div className="flex items-center gap-3 my-4">
+                        <div className="flex-1 h-px bg-base-3" />
+                        <span className="text-xs uppercase text-secondary-content/50 font-medium">or</span>
+                        <div className="flex-1 h-px bg-base-3" />
+                    </div>
+
+                    <GoogleButton mutationFunction={googleAuthApi} onSuccess={handleLoginSuccess} />
+                </Modal.Body>
+            </Tabs>
         </Modal>
     );
 }

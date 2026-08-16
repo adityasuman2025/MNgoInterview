@@ -62,7 +62,7 @@ export default function Navbar() {
                             {(close) => (
                                 <div className="w-48 border border-ternary bg-secondary text-secondary-content p-2">
                                     <div className="px-3 py-2 border-b border-ternary text-sm font-semibold truncate">
-                                        {user?.name}
+                                        {user?.name || "User name"}
                                     </div>
                                     <button
                                         type="button"
@@ -84,7 +84,7 @@ export default function Navbar() {
                             onClick={toogleModal}
                             className="text-xs font-semibold"
                         >
-                            Log in
+                            Login
                         </Button>
                     )}
                 </div>

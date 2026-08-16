@@ -1,39 +1,34 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useMemo, useCallback, useState, useEffect } from "react";
+import { createContext, ReactNode, useContext, useMemo, useCallback, useState } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import LoginModal from "@/components/LoginModal";
 import { logout } from "@/utils";
-import type { UserType } from "@/apis/user";
+import { getUserDetailsApi } from "@/apis/user";
+import type { UserType } from "@/apis/types";
 import { COOKIES } from "@/constants";
 import { USER_QUERY_KEY } from "@/constants/reactQueryKeys";
 
 interface LoginContextType {
     toogleModal: () => void;
     isLogged: boolean;
-    user: UserType | null;
+    user: UserType | undefined;
     logoutUser: () => void;
 }
 const LoginContext = createContext<LoginContextType | null>(null);
 
-export default function LoginContextProvider({ children }: { children: ReactNode }) {
+interface LoginContextProviderProps {
+    initialIsLogged?: boolean;
+    children: ReactNode;
+}
+export default function LoginContextProvider({ initialIsLogged = false, children }: LoginContextProviderProps) {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [isLogged, setIsLogged] = useState<boolean>(false);
+    const [isLogged, setIsLogged] = useState<boolean>(initialIsLogged);
     const queryClient = useQueryClient();
 
-    // Retrieves user from persisted react-query cache (IndexedDB)
-    const { data: user = null } = useQuery<UserType | null>({
-        queryKey: [USER_QUERY_KEY],
-        queryFn: () => queryClient.getQueryData([USER_QUERY_KEY]) || null,
-        staleTime: Infinity,
-        gcTime: Infinity,
-    });
-
-    useEffect(() => {
-        const token = Cookies.get(COOKIES.USER_TOKEN);
-        if (token) setIsLogged(true);
-    }, []);
+    const { data } = useQuery({ queryKey: [USER_QUERY_KEY], queryFn: getUserDetailsApi, enabled: isLogged });
+    const user = data?.data?.user;
 
     const toogleModal = useCallback(() => {
         setIsModalOpen((prev) => !prev);
@@ -43,7 +38,7 @@ export default function LoginContextProvider({ children }: { children: ReactNode
         if (!token) return;
 
         Cookies.set(COOKIES.USER_TOKEN, token);
-        if (userData) queryClient.setQueryData([USER_QUERY_KEY], userData); // caching the user details using react-query
+        if (userData) queryClient.setQueryData([USER_QUERY_KEY], { data: { user: userData } }); // caching the user details using react-query
         setIsLogged(true);
     }, [queryClient]);
 

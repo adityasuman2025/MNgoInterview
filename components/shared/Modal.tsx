@@ -1,6 +1,4 @@
-"use client";
-
-import { type MouseEvent, type KeyboardEvent, useEffect, useRef, ReactNode } from "react";
+import { type MouseEvent, type KeyboardEvent, useEffect, useRef, ReactNode, memo } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalSubComponentProps {
@@ -49,9 +47,15 @@ function Modal({ isOpen = false, onClose, children, className = "" }: ModalProps
 
             e.preventDefault();
 
-            const focusableElements = Array.from(
-                backdropRef.current?.querySelectorAll<HTMLElement>(`input, button, [href], [tabindex]`)
+            const allElements = Array.from(
+                backdropRef.current.querySelectorAll<HTMLElement>(
+                    `input:not([disabled]), button:not([disabled]), [href], select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])`
+                )
             );
+
+            // Filter out elements that are inside hidden containers or not visible
+            const focusableElements = allElements.filter(el => !el.closest("[hidden]") && el.offsetParent !== null);
+
             if (!focusableElements.length) return;
 
             const activeElement = document.activeElement as HTMLElement;
@@ -73,7 +77,6 @@ function Modal({ isOpen = false, onClose, children, className = "" }: ModalProps
     }
 
     if (!isOpen) return null;
-
     return createPortal(
         <div
             ref={backdropRef}
@@ -97,7 +100,7 @@ function Modal({ isOpen = false, onClose, children, className = "" }: ModalProps
     );
 }
 
-function ModalHeader({ children, className = "" }: ModalSubComponentProps) {
+function Header({ children, className = "" }: ModalSubComponentProps) {
     return (
         <header id="modal-header" aria-label="modal header" className={`w-full p-2 ${className}`}>
             {children}
@@ -105,7 +108,7 @@ function ModalHeader({ children, className = "" }: ModalSubComponentProps) {
     );
 }
 
-function ModalBody({ children, className = "" }: ModalSubComponentProps) {
+function Body({ children, className = "" }: ModalSubComponentProps) {
     return (
         <main id="modal-body" aria-label="modal body" className={`w-full p-2 overflow-y-auto flex-1 ${className}`}>
             {children}
@@ -113,7 +116,7 @@ function ModalBody({ children, className = "" }: ModalSubComponentProps) {
     );
 }
 
-function ModalFooter({ children, className = "" }: ModalSubComponentProps) {
+function Footer({ children, className = "" }: ModalSubComponentProps) {
     return (
         <footer id="modal-footer" aria-label="modal footer" className={`w-full p-2 ${className}`}>
             {children}
@@ -121,8 +124,8 @@ function ModalFooter({ children, className = "" }: ModalSubComponentProps) {
     );
 }
 
-Modal.ModalHeader = ModalHeader;
-Modal.ModalBody = ModalBody;
-Modal.ModalFooter = ModalFooter;
+Modal.Header = memo(Header);
+Modal.Body = memo(Body);
+Modal.Footer = memo(Footer);
 
 export default Modal;

@@ -1,5 +1,3 @@
-"use client";
-
 import { ReactNode, useState, useRef, useEffect, useCallback, memo } from "react";
 
 interface DropdownProps {

@@ -13,6 +13,7 @@ export default function ReactQueryProvider({ children }: { children: ReactNode }
             new QueryClient({
                 defaultOptions: {
                     queries: {
+                        refetchOnWindowFocus: false, // 👈 Disables refetch when switching back to the tab
                         staleTime: 0, // Stale immediately so background revalidation always checks for updates
                         gcTime: Infinity, // Keep cached data in memory forever
                     },
