@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getTopicsApi } from "@/apis/user";
+import { TOPICS_QUERY_KEY } from "@/constants/reactQueryKeys";
 import {
     Code2,
     Boxes,
@@ -37,7 +38,7 @@ function getTopicIcon(topicName: string) {
 export default function DashboardPage() {
     const { data, isLoading, isFetching } = useQuery({
         queryFn: getTopicsApi,
-        queryKey: ["getTopicsApi"],
+        queryKey: [TOPICS_QUERY_KEY],
     });
 
     const topics = data?.data || [];

@@ -1,8 +1,8 @@
-import { type ComponentProps } from "react";
+import { memo, type ComponentProps } from "react";
 
 type InputProps = ComponentProps<"input">;
 
-export default function Input({ className = "", ...props }: InputProps) {
+function Input({ className = "", ...props }: InputProps) {
     return (
         <input
             className={`w-full h-11 rounded-lg px-3 bg-ternary text-ternary-content ${className}`}
@@ -10,3 +10,5 @@ export default function Input({ className = "", ...props }: InputProps) {
         />
     );
 }
+
+export default memo(Input);

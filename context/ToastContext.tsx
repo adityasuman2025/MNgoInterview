@@ -78,7 +78,7 @@ interface ToastContextType {
     error: (text: string) => void,
     info: (text: string) => void,
 };
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+const ToastContext = createContext<ToastContextType | null>(null);
 
 export default function ToastProvider({ children }: { children: ReactNode }) {
     const [toasts, setToasts] = useState<ToastType[]>([]);
@@ -107,7 +107,7 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
                     <section
                         role="region"
                         aria-label="notifications"
-                        className="fixed bottom-3 right-3 max-h-screen overflow-y-auto flex flex-col gap-4 z-10"
+                        className="fixed bottom-3 right-3 max-h-screen overflow-y-auto flex flex-col gap-4 z-11"
                     >
                         {toasts.map(toast => (
                             <MemoisedToast key={toast.id} onClose={handleToastClose} {...toast} />

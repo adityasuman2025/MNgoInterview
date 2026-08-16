@@ -28,11 +28,34 @@ export function getTopicsApi(): Promise<getTopicsApiResp> {
     });
 }
 
-export function userLoginApi(data: { email: string, password: string }) {
+export interface UserType {
+    _id: string;
+    name: string;
+    email: string;
+    authMethod: string;
+}
+export interface AuthResponse {
+    data: {
+        token: string;
+        user: UserType;
+    };
+    message?: string;
+}
+
+export function userLoginApi(data: { email: string; password: string }): Promise<AuthResponse> {
     return authApiClient({
         path: "/auth/login",
         authRequired: false,
         method: API_METHODS.POST,
-        body: data
-    })
+        body: data,
+    });
+}
+
+export function userSignupApi(data: { name: string; email: string; password: string }): Promise<AuthResponse> {
+    return authApiClient({
+        path: "/auth/signup",
+        authRequired: false,
+        method: API_METHODS.POST,
+        body: data,
+    });
 }

@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import ThemeContextProvider from "@/context/Theme";
-import ToastProvider from "@/context/Toast";
-import ReactQueryProvider from "@/context/ReactQuery";
+import ThemeContextProvider from "@/context/ThemeContext";
+import ToastProvider from "@/context/ToastContext";
+import LoginContextProvider from "@/context/LoginContext";
+import ReactQueryProvider from "@/context/ReactQueryContext";
 import { THEME_COLOR } from "@/constants";
 import { APP_NAME, BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 import "./globals.css";
@@ -131,16 +132,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en" suppressHydrationWarning>
             <body className="bg-primary-gradient">
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-                />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
                 <ThemeContextProvider>
-                    <ToastProvider>
-                        <ReactQueryProvider>
-                            {children}
-                        </ReactQueryProvider>
-                    </ToastProvider>
+                    <ReactQueryProvider>
+                        <ToastProvider>
+                            <LoginContextProvider>
+                                {children}
+                            </LoginContextProvider>
+                        </ToastProvider>
+                    </ReactQueryProvider>
                 </ThemeContextProvider>
             </body>
         </html>

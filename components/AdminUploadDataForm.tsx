@@ -4,7 +4,7 @@ import { type ChangeEvent, useRef } from "react";
 import { Upload } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import Button from "@/components/shared/Button";
-import { useToast } from "@/context/Toast";
+import { useToast } from "@/context/ToastContext";
 import { uploadHTMLFileAPI } from "@/apis/admin";
 
 export default function AdminUploadDataForm() {

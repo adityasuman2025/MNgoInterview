@@ -1,4 +1,4 @@
-import { type ComponentProps } from "react";
+import { memo, type ComponentProps } from "react";
 import { Loader2 } from "lucide-react";
 
 export const BUTTON_VARIANTS = {
@@ -19,7 +19,7 @@ interface ButtonProps extends ComponentProps<"button"> {
     variant?: ButtonVariant;
     loading?: boolean;
 }
-export default function Button({
+function Button({
     variant = BUTTON_VARIANTS.PRIMARY,
     loading = false,
     disabled = false,
@@ -35,7 +35,7 @@ export default function Button({
             tabIndex={0}
             type={type}
             disabled={isDisabled}
-            className={`w-fit h-fit rounded-lg px-4 py-2 flex items-center justify-center gap-2 font-medium cursor-pointer transition-all hover:brightness-90 active:brightness-75 disabled:opacity-40 disabled:pointer-events-none ${variantStyles[variant]} ${className}`}
+            className={`w-fit h-fit rounded-lg px-4 py-2 flex items-center justify-center gap-2 font-medium cursor-pointer focus:outline-2 focus:outline-offset-2 transition-all hover:brightness-90 active:brightness-75 disabled:opacity-40 disabled:pointer-events-none ${variantStyles[variant]} ${className}`}
             {...props}
         >
             {loading && <Loader2 className="w-5 h-5 animate-spin" />}
@@ -43,3 +43,5 @@ export default function Button({
         </button>
     );
 }
+
+export default memo(Button);

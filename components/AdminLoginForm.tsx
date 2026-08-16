@@ -5,7 +5,7 @@ import validator from "validator";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { useToast } from "@/context/Toast";
+import { useToast } from "@/context/ToastContext";
 import Input from "@/components/shared/Input";
 import Button from "@/components/shared/Button";
 import { adminLoginAPI } from "@/apis/admin";

@@ -43,15 +43,6 @@ export default function Home() {
                                 <ArrowRight className="w-4 h-4" />
                             </Button>
                         </Link>
-
-                        <Link href={ROUTES.DASHBOARD}>
-                            <Button
-                                variant={BUTTON_VARIANTS.SECONDARY}
-                                className="!px-6 !py-3 text-sm font-semibold border border-secondary"
-                            >
-                                Start Practice
-                            </Button>
-                        </Link>
                     </div>
 
                     {/* Stats Strip */}
@@ -86,9 +77,9 @@ export default function Home() {
                         {MARKETING_FEATURES.map((feature, idx) => (
                             <div
                                 key={idx}
-                                className="flex flex-col gap-3 p-5 rounded-xl border border-ternary bg-secondary text-secondary-content hover:border-primary/50 transition-all shadow-sm"
+                                className="flex flex-col gap-3 p-5 rounded-xl border border-ternary bg-ternary text-ternary-content hover:border-primary/50 transition-all shadow-sm"
                             >
-                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-base-1 border border-secondary">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-base-1 border border-ternary">
                                     {feature.icon}
                                 </div>
                                 <h3 className="text-base font-semibold text-ternary-content">
@@ -106,7 +97,7 @@ export default function Home() {
             {/* Bottom Call to Action */}
             <section className="py-16 border-t border-secondary">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6">
-                    <div className="relative overflow-hidden rounded-2xl border border-secondary bg-secondary text-secondary-content p-8 sm:p-12 text-center flex flex-col items-center gap-5 shadow-lg">
+                    <div className="relative overflow-hidden rounded-2xl border border-ternary bg-secondary text-secondary-content p-8 sm:p-12 text-center flex flex-col items-center gap-5 shadow-lg">
                         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-content">
                             <Code2 className="w-6 h-6" />
                         </div>
