@@ -12,3 +12,5 @@ export const COOKIES = {
     ADMIN_TOKEN: "admin-token",
     USER_TOKEN: "token",
 } as const;
+
+export const REACT_QUERY_OFFLINE_CACHE = "MNGO_REACT_QUERY_OFFLINE_CACHE";

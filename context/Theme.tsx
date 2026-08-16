@@ -1,17 +1,18 @@
 "use client";
 
 import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from "next-themes";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 
-export default function ThemeContextProvider({
-    children,
-}: {
-    children: ReactNode;
-}) {
+export const THEMES = {
+    DARK: "dark",
+    LIGHT: "light",
+}
+
+export default function ThemeContextProvider({ children }: { children: ReactNode }) {
     return (
         <NextThemesProvider
             attribute="data-theme"
-            defaultTheme="dark"
+            defaultTheme={THEMES.DARK}
             enableSystem
         >
             {children}
@@ -21,10 +22,15 @@ export default function ThemeContextProvider({
 
 export function useTheme() {
     const { theme, setTheme } = useNextTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     function toogleTheme() {
-        setTheme(theme === "dark" ? "light" : "dark");
+        setTheme(theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK);
     }
 
-    return { theme, toogleTheme };
+    return { theme, toogleTheme, mounted };
 }

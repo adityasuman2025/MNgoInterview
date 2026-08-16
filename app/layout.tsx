@@ -3,6 +3,7 @@ import ThemeContextProvider from "@/context/Theme";
 import ToastProvider from "@/context/Toast";
 import ReactQueryProvider from "@/context/ReactQuery";
 import { THEME_COLOR } from "@/constants";
+import { APP_NAME, BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -16,7 +17,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://interview.adityas.site"),
-    title: "MNgo Interview Prep — Practice Software Engineering Interview Questions",
+    title: BROWSER_TAB_TITLE.HOME,
     description:
         "Ace your next software engineering interview with MNgo Interview Prep. Practice curated questions on JavaScript, React, CSS, HTML, system design, DSA, web security, and more — completely free.",
     keywords: [
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
     ],
     authors: [{ name: "Aditya Suman", url: "https://adityas.site" }],
     creator: "Aditya Suman",
-    applicationName: "MNgo Interview Prep",
+    applicationName: APP_NAME,
     alternates: {
         canonical: "https://interview.adityas.site",
     },
@@ -60,8 +61,8 @@ export const metadata: Metadata = {
     },
     openGraph: {
         type: "website",
-        siteName: "MNgo Interview Prep",
-        title: "MNgo Interview Prep — Practice Software Engineering Interview Questions",
+        siteName: APP_NAME,
+        title: BROWSER_TAB_TITLE.HOME,
         description:
             "Ace your next software engineering interview with MNgo Interview Prep. Practice curated questions on JavaScript, React, CSS, HTML, system design, DSA, web security, and more — completely free.",
         url: "https://interview.adityas.site",
@@ -77,7 +78,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "MNgo Interview Prep — Practice Software Engineering Interview Questions",
+        title: BROWSER_TAB_TITLE.HOME,
         description:
             "Ace your next software engineering interview with MNgo Interview Prep. Practice curated questions on JavaScript, React, CSS, HTML, system design, DSA, web security, and more — completely free.",
         images: ["https://interview.adityas.site/og-image.png"],
@@ -87,7 +88,7 @@ export const metadata: Metadata = {
     appleWebApp: {
         capable: true,
         statusBarStyle: "black-translucent",
-        title: "MNgo Interview Prep",
+        title: APP_NAME,
     },
     icons: {
         icon: "/xxxs.png",
@@ -105,7 +106,7 @@ export const metadata: Metadata = {
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "MNgo Interview Prep",
+    name: APP_NAME,
     url: "https://interview.adityas.site",
     description:
         "Practice curated software engineering interview questions covering JavaScript, React, CSS, HTML, system design, DSA, web security, and more — completely free.",
@@ -129,13 +130,11 @@ const jsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <head>
+            <body className="bg-primary-gradient">
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
-            </head>
-            <body className="bg-primary-gradient">
                 <ThemeContextProvider>
                     <ToastProvider>
                         <ReactQueryProvider>

@@ -1,74 +1,15 @@
-"use client";
+import { type Metadata } from "next";
+import AdminLoginForm from "@/components/AdminLoginForm";
+import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 
-import { type SubmitEvent } from "react";
-import validator from "validator";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import Cookies from "js-cookie";
-import { useToast } from "@/context/Toast";
-import Input from "@/components/Input";
-import Button from "@/components/Button";
-import AdminNotAuth from "@/hocs/AdminNotAuth";
-import { adminLoginAPI } from "@/apis/admin";
-import { COOKIES } from "@/constants";
-import { ROUTES } from "@/constants/routes";
-
-function AdminPag() {
-    const router = useRouter();
-    const toast = useToast();
-
-    const loginMutation = useMutation({
-        mutationFn: adminLoginAPI,
-        onSuccess: (resp) => {
-            const token = resp?.data?.token;
-            if (token) {
-                Cookies.set(COOKIES.ADMIN_TOKEN, token);
-                router.replace(ROUTES.ADMIN.DASHBOARD);
-            } else toast.error("token is missing");
-        },
-        onError: (err) => toast.error(err.message)
-    })
-
-    async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
-        e.preventDefault();
-
-        const formData = new FormData(e.target as HTMLFormElement);
-
-        const email = (formData.get("email") as string)?.trim();
-        const password = (formData.get("password") as string)?.trim();
-        if (!email || !password) return toast.error("please enter email and password");
-
-        if (!validator.isEmail(email)) return toast.error("enter a valid email");
-
-        loginMutation.mutate({ email, password });
-    }
-
-    return (
-        <main className="flex min-h-screen items-center justify-center">
-            <form className="flex flex-col items-center justify-center gap-5 w-74 md:w-100" onSubmit={handleSubmit}>
-                <Input
-                    name="email"
-                    autoFocus
-                    type="text"
-                    placeholder="email"
-                />
-                <Input
-                    name="password"
-                    type="password"
-                    placeholder="password"
-                />
-                <Button tabIndex={0} loading={loginMutation.isPending}>
-                    login
-                </Button>
-            </form>
-        </main>
-    );
-}
-
+export const metadata: Metadata = {
+    title: BROWSER_TAB_TITLE.ADMIN.LOGIN,
+    robots: { index: false, follow: false },
+};
 export default function Page() {
     return (
-        <AdminNotAuth>
-            <AdminPag />
-        </AdminNotAuth>
+        <main className="flex min-h-screen items-center justify-center">
+            <AdminLoginForm />
+        </main>
     );
 }

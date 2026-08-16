@@ -13,7 +13,7 @@ export type ApiMethodTypes = keyof typeof API_METHODS;
 interface ApiRequestOptions {
     path: string;
     method?: ApiMethodTypes;
-    body?: any;
+    body?: unknown;
     authRequired?: boolean;
 }
 interface ApiClientOptions {
@@ -35,7 +35,7 @@ export default function createApiClient({ baseUrl, tokenKey }: ApiClientOptions)
         const isFormData = body instanceof FormData;
 
         const headers: Record<string, string> = {};
-        if (authRequired && token) headers["Authorization"] = `Bearer ${token}`;
+        if (token) headers["Authorization"] = `Bearer ${token}`;
         if (body && !isFormData) headers["Content-Type"] = "application/json";
 
         const resp = await fetch(`${baseUrl}${path}`, {
