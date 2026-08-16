@@ -5,7 +5,7 @@ type InputProps = ComponentProps<"input">;
 function Input({ className = "", ...props }: InputProps) {
     return (
         <input
-            className={`w-full h-11 rounded-lg px-3 bg-ternary text-ternary-content ${className}`}
+            className={`w-full h-11 rounded-lg px-3 bg-ternary text-ternary-content text-sm ${className}`}
             {...props}
         />
     );

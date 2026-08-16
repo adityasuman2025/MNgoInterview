@@ -62,16 +62,16 @@ function Modal({ isOpen = false, onClose, children, className = "" }: ModalProps
             const activeElementIdx = focusableElements.indexOf(activeElement);
 
             if (activeElementIdx < 0) {
-                focusableElements[0].focus();
+                focusableElements[0].focus({ focusVisible: true } as FocusOptions);
                 return;
             }
 
             if (!e.shiftKey) {
                 const nextIdx = (activeElementIdx + 1) % focusableElements.length;
-                focusableElements[nextIdx].focus();
+                focusableElements[nextIdx].focus({ focusVisible: true } as FocusOptions);
             } else if (e.shiftKey) {
                 const prevIdx = activeElementIdx - 1 >= 0 ? activeElementIdx - 1 : focusableElements.length - 1;
-                focusableElements[prevIdx].focus();
+                focusableElements[prevIdx].focus({ focusVisible: true } as FocusOptions);
             }
         }
     }

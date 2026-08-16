@@ -35,7 +35,7 @@ function Button({
             tabIndex={0}
             type={type}
             disabled={isDisabled}
-            className={`w-fit h-fit rounded-lg px-4 py-2 flex items-center justify-center gap-2 font-medium cursor-pointer focus:outline-2 focus:outline-offset-2 transition-all hover:brightness-90 active:brightness-75 disabled:opacity-40 disabled:pointer-events-none ${variantStyles[variant]} ${className}`}
+            className={`w-fit h-fit rounded-lg px-4 py-2 flex text-sm items-center justify-center gap-2 font-medium cursor-pointer transition-colors hover:brightness-90 active:brightness-75 disabled:opacity-40 disabled:pointer-events-none ${variantStyles[variant]} ${className}`}
             {...props}
         >
             {loading && <Loader2 className="w-5 h-5 animate-spin" />}

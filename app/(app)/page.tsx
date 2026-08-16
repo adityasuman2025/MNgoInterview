@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 import { ROUTES } from "@/constants/routes";
 import { MARKETING_FEATURES, MARKETING_STATS } from "@/constants/marketing";
-import Button, { BUTTON_VARIANTS } from "@/components/shared/Button";
+import Button from "@/components/shared/Button";
 import { Sparkles, ArrowRight, Code2 } from "lucide-react";
 
 export const metadata: Metadata = {

@@ -42,7 +42,7 @@ export default function DashboardPage() {
     });
 
     const topics = data?.data || [];
-    console.log("topics", topics, isFetching)
+    console.log("topics", topics, isFetching);
 
     return (
         <div className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col gap-10">

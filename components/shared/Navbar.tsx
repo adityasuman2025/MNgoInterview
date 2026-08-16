@@ -15,7 +15,7 @@ export default function Navbar() {
     const { user, isLogged, toogleModal, logoutUser } = useLogin();
 
     return (
-        <header className="sticky top-0 z-5 w-full border-b border-base-3 bg-secondary text-secondary-content backdrop-blur-lg transition-colors">
+        <header className="sticky top-0 z-5 w-full  bg-secondary/30 text-secondary-content backdrop-blur-lg transition-colors">
             <div className="max-w-7xl mx-auto flex h-14 items-center justify-between px-4 md:px-8">
                 <Link href={ROUTES.HOME} className="flex items-center gap-2.5">
                     <Image
