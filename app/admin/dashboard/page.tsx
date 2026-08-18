@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import AdminUploadDataForm from "@/components/AdminUploadDataForm";
+import AdminUploadDataForm from "@/components/admin/AdminUploadDataForm";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 
 export const metadata: Metadata = {

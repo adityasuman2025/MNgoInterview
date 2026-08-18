@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import AdminLoginForm from "@/components/AdminLoginForm";
+import AdminLoginForm from "@/components/admin/AdminLoginForm";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 
 export const metadata: Metadata = {

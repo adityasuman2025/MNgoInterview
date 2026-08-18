@@ -1,11 +1,11 @@
 import { memo, type SubmitEvent } from "react";
 import validator from "validator";
 import { useMutation } from "@tanstack/react-query";
-import Modal from "./shared/Modal";
-import Button, { BUTTON_VARIANTS } from "./shared/Button";
-import Input from "./shared/Input";
-import Tabs from "./shared/Tabs";
-import GoogleButton from "./shared/GoogleButton";
+import Modal from "@/components/shared/Modal";
+import Button, { BUTTON_VARIANTS } from "@/components/shared/Button";
+import Input from "@/components/shared/Input";
+import Tabs from "@/components/shared/Tabs";
+import GoogleButton from "@/components/shared/GoogleButton";
 import { useToast } from "@/context/ToastContext";
 import { userLoginApi, userSignupApi, googleAuthApi } from "@/apis/user";
 import type { UserType } from "@/apis/types";

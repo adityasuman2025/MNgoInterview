@@ -11,7 +11,7 @@ import Button from "@/components/shared/Button";
 import { adminLoginApi, adminGoogleAuthApi } from "@/apis/admin";
 import { COOKIES } from "@/constants";
 import { ROUTES } from "@/constants/routes";
-import GoogleButton from "./shared/GoogleButton";
+import GoogleButton from "@/components/shared/GoogleButton";
 
 export default function AdminLoginForm() {
     const router = useRouter();

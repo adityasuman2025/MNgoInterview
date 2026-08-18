@@ -15,6 +15,7 @@ interface ApiRequestOptions {
     method?: ApiMethodTypes;
     body?: unknown;
     authRequired?: boolean;
+    token?: string,
 }
 interface ApiClientOptions {
     baseUrl: string;
@@ -26,10 +27,11 @@ export default function createApiClient({ baseUrl, tokenKey }: ApiClientOptions)
         method = API_METHODS.GET,
         body,
         authRequired = true,
+        token: passedToken
     }: ApiRequestOptions) {
         if (!baseUrl || !tokenKey) throw new Error("missing base url or token key");
 
-        const token = Cookies.get(tokenKey);
+        const token = passedToken || (typeof window !== "undefined" ? Cookies.get(tokenKey) : undefined);
         if (!token && authRequired) return logout(tokenKey); // when api route does not require authentication -> then no need of loging out user
 
         const isFormData = body instanceof FormData;

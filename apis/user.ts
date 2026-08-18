@@ -37,8 +37,8 @@ export function userSignupApi(data: { name: string; email: string; password: str
     });
 }
 
-export function getUserDetailsApi(): Promise<AuthResponse> {
-    return authApiClient({ path: "/auth/me" });
+export function getUserDetailsApi({ token }: { token?: string } = {}): Promise<AuthResponse> {
+    return authApiClient({ path: "/auth/me", token });
 }
 
 export function googleAuthApi(data: { idToken: string }): Promise<AuthResponse> {

@@ -37,7 +37,7 @@ export default function Home() {
 
                     {/* CTA Actions */}
                     <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-                        <Link href={ROUTES.DASHBOARD}>
+                        <Link href={ROUTES.TOPICS}>
                             <Button className="!px-6 !py-3 text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/20">
                                 <span>Explore Topics</span>
                                 <ArrowRight className="w-4 h-4" />
@@ -107,7 +107,7 @@ export default function Home() {
                         <p className="text-sm opacity-80 text-secondary-content max-w-md">
                             Join developers preparing for technical interviews at Google, Meta, Amazon, and top startups.
                         </p>
-                        <Link href={ROUTES.DASHBOARD}>
+                        <Link href={ROUTES.TOPICS}>
                             <Button className="!px-7 !py-3 text-sm font-semibold flex items-center gap-2 mt-2">
                                 <span>Get Started for Free</span>
                                 <ArrowRight className="w-4 h-4" />

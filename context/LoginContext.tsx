@@ -3,10 +3,9 @@
 import { createContext, ReactNode, useContext, useMemo, useCallback, useState } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import LoginModal from "@/components/LoginModal";
+import LoginModal from "@/components/auth/LoginModal";
 import { logout } from "@/utils";
-import { getUserDetailsApi } from "@/apis/user";
-import type { UserType } from "@/apis/types";
+import type { UserType, AuthResponse } from "@/apis/types";
 import { COOKIES } from "@/constants";
 import { USER_QUERY_KEY } from "@/constants/reactQueryKeys";
 
@@ -19,16 +18,22 @@ interface LoginContextType {
 const LoginContext = createContext<LoginContextType | null>(null);
 
 interface LoginContextProviderProps {
-    initialIsLogged?: boolean;
+    loggedUserData: AuthResponse | null;
     children: ReactNode;
 }
-export default function LoginContextProvider({ initialIsLogged = false, children }: LoginContextProviderProps) {
+export default function LoginContextProvider({ loggedUserData, children }: LoginContextProviderProps) {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [isLogged, setIsLogged] = useState<boolean>(initialIsLogged);
     const queryClient = useQueryClient();
 
-    const { data } = useQuery({ queryKey: [USER_QUERY_KEY], queryFn: getUserDetailsApi, enabled: isLogged });
+    const { data } = useQuery<AuthResponse | null>({
+        queryKey: [USER_QUERY_KEY],
+        queryFn: () => Promise.resolve(loggedUserData), // dummy queryFn to satisfy TanStack Query requirement without making any API calls
+        initialData: loggedUserData,
+        staleTime: Infinity,
+    });
     const user = data?.data?.user;
+    const isLogged = Boolean(user?._id);
+    console.log("logged user details:", user)
 
     const toogleModal = useCallback(() => {
         setIsModalOpen((prev) => !prev);
@@ -39,14 +44,11 @@ export default function LoginContextProvider({ initialIsLogged = false, children
 
         Cookies.set(COOKIES.USER_TOKEN, token);
         if (userData) queryClient.setQueryData([USER_QUERY_KEY], { data: { user: userData } }); // caching the user details using react-query
-        setIsLogged(true);
     }, [queryClient]);
 
     const logoutUser = useCallback(() => {
-        setIsLogged(false);
-        queryClient.removeQueries({ queryKey: [USER_QUERY_KEY] });
         logout(COOKIES.USER_TOKEN);
-    }, [queryClient]);
+    }, []);
 
     const contextValue = useMemo(() => ({ toogleModal, isLogged, user, logoutUser }), [toogleModal, isLogged, user, logoutUser]);
 
