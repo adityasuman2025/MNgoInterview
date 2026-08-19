@@ -5,6 +5,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import LoginModal from "@/components/auth/LoginModal";
 import { logout } from "@/utils";
+import { getUserDetailsApi } from "@/apis/user";
 import type { UserType, AuthResponse } from "@/apis/types";
 import { COOKIES } from "@/constants";
 import { USER_QUERY_KEY } from "@/constants/reactQueryKeys";
@@ -18,17 +19,17 @@ interface LoginContextType {
 const LoginContext = createContext<LoginContextType | null>(null);
 
 interface LoginContextProviderProps {
-    loggedUserData: AuthResponse | null;
     children: ReactNode;
 }
-export default function LoginContextProvider({ loggedUserData, children }: LoginContextProviderProps) {
+export default function LoginContextProvider({ children }: LoginContextProviderProps) {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const queryClient = useQueryClient();
 
     const { data } = useQuery<AuthResponse | null>({
         queryKey: [USER_QUERY_KEY],
-        queryFn: () => Promise.resolve(loggedUserData), // dummy queryFn to satisfy TanStack Query requirement without making any API calls
-        initialData: loggedUserData,
+        queryFn: () => getUserDetailsApi(),
+        enabled: Boolean(Cookies.get(COOKIES.USER_TOKEN)),
+        retry: false,
         staleTime: Infinity,
     });
     const user = data?.data?.user;
@@ -39,16 +40,18 @@ export default function LoginContextProvider({ loggedUserData, children }: Login
         setIsModalOpen((prev) => !prev);
     }, []);
 
-    const loginUser = useCallback((token: string, userData: UserType) => {
+    const loginUser = useCallback(async (token: string, userData: UserType) => {
         if (!token) return;
 
         Cookies.set(COOKIES.USER_TOKEN, token);
+        await queryClient.resetQueries(); // clearing react-query cache
+
         if (userData) queryClient.setQueryData([USER_QUERY_KEY], { data: { user: userData } }); // caching the user details using react-query
     }, [queryClient]);
 
     const logoutUser = useCallback(() => {
-        logout(COOKIES.USER_TOKEN);
-    }, []);
+        logout(COOKIES.USER_TOKEN, queryClient);
+    }, [queryClient]);
 
     const contextValue = useMemo(() => ({ toogleModal, isLogged, user, logoutUser }), [toogleModal, isLogged, user, logoutUser]);
 

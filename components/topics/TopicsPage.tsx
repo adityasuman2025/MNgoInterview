@@ -1,52 +1,38 @@
 "use client";
 
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles } from "lucide-react";
-import LoaderOrError from "@/components/shared/LoaderOrError";
-import { getTopicsApi } from "@/apis/user";
-import { TOPICS_QUERY_KEY } from "@/constants/reactQueryKeys";
 import { useLogin } from "@/context/LoginContext";
-import TopicItem from "./TopicItem";
+import ContinueLearningCard from "@/components/topics/ContinueLearningCard";
+import TopicItem from "@/components/topics/TopicItem";
+import TopicsLoaderOrError from "@/components/topics/TopicsLoaderOrError";
+import { getTopicsApi } from "@/apis/topic";
+import { TOPICS_QUERY_KEY } from "@/constants/reactQueryKeys";
 
 export default function TopicsPage() {
-    const { user } = useLogin();
+    const { isLogged } = useLogin();
 
-    const { data, isLoading, isError, error } = useQuery({ queryFn: getTopicsApi, queryKey: [TOPICS_QUERY_KEY, user?._id] });
+    const { isLoading, isError, error, data } = useQuery({ queryFn: () => getTopicsApi(), queryKey: [TOPICS_QUERY_KEY] });
     const topics = data?.data || [];
 
-    return (
-        <>
-            <section className="flex flex-col items-center text-center gap-3 max-w-2xl mx-auto pt-2">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-secondary bg-secondary text-xs font-medium text-secondary-content">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Free Software Engineering Interview Prep</span>
-                </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-ternary-content leading-tight">
-                    Practice Real-World <br className="hidden sm:block" />
-                    <span className="text-primary">Interview Questions</span>
-                </h1>
-                <p className="text-xs sm:text-sm opacity-70 text-ternary-content max-w-md">
-                    Curated questions tested by top tech companies. Master frontend, backend, DSA, and system design.
-                </p>
-            </section>
+    const continueLearningTopics = useMemo(() => {
+        if (!isLogged) return [];
+        return [...topics].sort((a, b) => (b.completedQuestions || 0) - (a.completedQuestions || 0)).slice(0, 2);
+    }, [isLogged, topics]);
 
-            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                <LoaderOrError
-                    isLoading={isLoading && topics.length === 0}
-                    isError={isError}
-                    errorMessage={error?.message}
-                    skeletonElement={Array.from({ length: 9 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="h-20 border border-ternary rounded-lg bg-secondary animate-pulse"
-                        />
-                    ))}
-                >
-                    {topics.map(topic => (
-                        <TopicItem key={topic._id} topic={topic} />
-                    ))}
-                </LoaderOrError>
-            </section>
-        </>
+    return (
+        <TopicsLoaderOrError
+            isLoading={isLoading}
+            isLogged={isLogged}
+            isError={isError}
+            errorMessage={error?.message}
+            continueLearningContent={continueLearningTopics.map((topic) => (
+                <ContinueLearningCard key={topic._id} topic={topic} />
+            ))}
+        >
+            {topics.map((topic) => (
+                <TopicItem key={topic._id} topic={topic} />
+            ))}
+        </TopicsLoaderOrError>
     );
 }

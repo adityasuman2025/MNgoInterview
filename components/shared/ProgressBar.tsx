@@ -16,13 +16,13 @@ function ProgressBar({
 
     return (
         <div className="flex items-center gap-2">
-            <div className={`flex-1 h-1.5 bg-ternary rounded-full overflow-hidden ${className}`}>
+            <div className={`flex-1 h-1.5 bg-primary/20 rounded-full overflow-hidden ${className}`}>
                 <div
                     className={`w-full h-full bg-primary transition-transform duration-300 ease-out ${progressClassName}`}
                     style={{ transform: `translateX(-${100 - percentage}%)` }}
                 />
             </div>
-            <div className="min-w-fit text-2xs text-primary-content/40">{`${value} / ${total}`}</div>
+            <div className="min-w-fit text-2xs text-secondary-content/60">{`${value} / ${total}`}</div>
         </div>
     );
 }

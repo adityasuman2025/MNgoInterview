@@ -13,9 +13,9 @@ export default function ReactQueryProvider({ children }: { children: ReactNode }
             new QueryClient({
                 defaultOptions: {
                     queries: {
-                        refetchOnWindowFocus: false, // 👈 Disables refetch when switching back to the tab
-                        staleTime: 0, // Stale immediately so background revalidation always checks for updates
-                        gcTime: Infinity, // Keep cached data in memory forever
+                        refetchOnWindowFocus: false, // disables refetch when switching back to the tab
+                        staleTime: 60 * 1000, // 1 minute fresh window (prevents duplicate fetch on mount after SSR)
+                        gcTime: Infinity, // keep cached data in memory forever
                     },
                 },
             })

@@ -1,6 +1,6 @@
 import { COOKIES } from "@/constants";
-import createApiClient, { API_METHODS } from "./client";
-import type { AuthResponse } from "./types";
+import createApiClient, { API_METHODS } from "@/apis/client";
+import type { AuthResponse } from "@/apis/types";
 
 const authApiClient = createApiClient({
     baseUrl: process.env.NEXT_PUBLIC_AUTH_API_BASE_URL || "",

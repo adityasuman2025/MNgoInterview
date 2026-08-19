@@ -1,23 +1,11 @@
-import createApiClient, { API_METHODS } from "./client";
+import createApiClient, { API_METHODS } from "@/apis/client";
 import { COOKIES } from "@/constants";
-import type { getTopicsApiResp, AuthResponse } from "./types";
+import type { AuthResponse } from "@/apis/types";
 
 const authApiClient = createApiClient({
     baseUrl: process.env.NEXT_PUBLIC_AUTH_API_BASE_URL || "",
     tokenKey: COOKIES.USER_TOKEN,
 });
-
-const interviewApiClient = createApiClient({
-    baseUrl: process.env.NEXT_PUBLIC_INTERVIEW_API_BASE_URL || "",
-    tokenKey: COOKIES.USER_TOKEN,
-});
-
-export function getTopicsApi(): Promise<getTopicsApiResp> {
-    return interviewApiClient({
-        path: "/topics",
-        authRequired: false,
-    });
-}
 
 export function userLoginApi(data: { email: string; password: string }): Promise<AuthResponse> {
     return authApiClient({
