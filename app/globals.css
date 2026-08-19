@@ -56,6 +56,9 @@
     --color-error: var(--color-error);
     --color-error-content: var(--color-error-content);
 
+    --text-2xs: 0.625rem;
+    --text-2xs--line-height: 0.75rem;
+
     --background-image-primary-gradient: linear-gradient(135deg,
             var(--color-base-1) 0%,
             var(--color-base-2) 50%,

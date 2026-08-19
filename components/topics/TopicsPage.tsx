@@ -11,15 +11,12 @@ import TopicItem from "./TopicItem";
 export default function TopicsPage() {
     const { user } = useLogin();
 
-    const { data, isLoading, isError, error } = useQuery({
-        queryFn: getTopicsApi,
-        queryKey: [TOPICS_QUERY_KEY, user?._id],
-    });
+    const { data, isLoading, isError, error } = useQuery({ queryFn: getTopicsApi, queryKey: [TOPICS_QUERY_KEY, user?._id] });
     const topics = data?.data || [];
 
     return (
         <>
-            <section className="flex flex-col items-center text-center gap-3 max-w-xl mx-auto pt-2">
+            <section className="flex flex-col items-center text-center gap-3 max-w-2xl mx-auto pt-2">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-secondary bg-secondary text-xs font-medium text-secondary-content">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Free Software Engineering Interview Prep</span>
@@ -33,27 +30,23 @@ export default function TopicsPage() {
                 </p>
             </section>
 
-            <LoaderOrError
-                isLoading={isLoading && topics.length === 0}
-                isError={isError}
-                errorMessage={error?.message}
-                skeletonElement={Array.from({ length: 9 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className="h-28 rounded-xl border border-secondary bg-secondary/30 animate-pulse"
-                    />
-                ))}
-            >
-                {topics.map((topic) => {
-                    const total = topic.totalQuestions ?? 0;
-                    const completed = topic.completedQuestions ?? 0;
-                    const isCompleted = completed > 0 && completed === total;
-
-                    return (
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+                <LoaderOrError
+                    isLoading={isLoading && topics.length === 0}
+                    isError={isError}
+                    errorMessage={error?.message}
+                    skeletonElement={Array.from({ length: 9 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className="h-20 border border-ternary rounded-lg bg-secondary animate-pulse"
+                        />
+                    ))}
+                >
+                    {topics.map(topic => (
                         <TopicItem key={topic._id} topic={topic} />
-                    )
-                })}
-            </LoaderOrError>
+                    ))}
+                </LoaderOrError>
+            </section>
         </>
     );
 }

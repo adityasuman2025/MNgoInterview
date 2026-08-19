@@ -1,46 +1,30 @@
-import {
-    Code2,
-    Boxes,
-    Server,
-    Shield,
-    Cloud,
-    Palette,
-    Layers,
-    Cpu,
-    Zap,
-    FileCode2,
-    BookOpen,
-    ArrowRight,
-    CheckCircle2,
-    Sparkles,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { TopicType } from "@/apis/types";
 import { ROUTES } from "@/constants/routes";
-
-function getTopicIcon(topicName: string) {
-    const name = topicName.toLowerCase();
-    if (name.includes("react")) return <Boxes className="w-5 h-5 text-sky-400" />;
-    if (name.includes("typescript")) return <FileCode2 className="w-5 h-5 text-blue-400" />;
-    if (name.includes("next")) return <Zap className="w-5 h-5 text-white" />;
-    if (name.includes("css") || name.includes("html")) return <Palette className="w-5 h-5 text-pink-400" />;
-    if (name.includes("system")) return <Cpu className="w-5 h-5 text-emerald-400" />;
-    if (name.includes("network") || name.includes("security")) return <Shield className="w-5 h-5 text-amber-400" />;
-    if (name.includes("cloud")) return <Cloud className="w-5 h-5 text-cyan-400" />;
-    if (name.includes("node")) return <Server className="w-5 h-5 text-green-400" />;
-    if (name.includes("dsa") || name.includes("algorithm")) return <Layers className="w-5 h-5 text-purple-400" />;
-    return <Code2 className="w-5 h-5 text-primary" />;
-}
+import { getTopicIcon } from "@/utils/topics";
+import ProgressBar from "../shared/ProgressBar";
+import { memo } from "react";
 
 interface TopicItemProps {
     topic: TopicType
 }
-export default function TopicItem({ topic }: TopicItemProps) {
+function TopicItem({ topic }: TopicItemProps) {
     return (
         <Link
             href={ROUTES.TOPIC(topic._id)}
+            className="group border border-ternary rounded-lg text-secondary-content p-4 flex items-center gap-5 hover:border-primary/50 transition-colors"
         >
-            {topic.slug}
+            <div className="w-10 h-10 bg-base-3 border border-ternary rounded-md flex items-center justify-center">
+                {getTopicIcon(topic.topicName)}
+            </div>
+            <div className="text-sm flex-1 flex flex-col gap-3">
+                {topic.topicName}
+                <ProgressBar value={Number(topic.completedQuestions)} total={Number(topic.totalQuestions)} />
+            </div>
+            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
     );
 }
+
+export default memo(TopicItem);
