@@ -27,7 +27,9 @@ export const metadata: Metadata = {
     5. useQuery([TOPICS_KEY])     --> Reads immediately from cache (0ms, no extra fetch!)
 */
 
-async function TopicData({ token }: { token?: string }) {
+async function TopicsData() {
+    const token = await getTokenFromServerCookies();
+
     const queryClient = createServerQueryClient();
     await queryClient.prefetchQuery({ queryFn: () => getTopicsApi({ token }), queryKey: [TOPICS_QUERY_KEY] });
 
@@ -39,9 +41,8 @@ async function TopicData({ token }: { token?: string }) {
 }
 
 // calling get topics api on server so that topics page can be rendered server side (better SEO & light client-side bundle)
+// using Suspense will stream the server rendered HTML of TopicsData and displays the fallback loader till await computation is happening (i.e. getTokenFromServerCookies & getTopicsApi)
 export default async function Topics() {
-    const token = await getTokenFromServerCookies();
-
     return (
         <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col gap-2">
             <section className="flex flex-col items-center text-center gap-3 max-w-2xl mx-auto pt-2">
@@ -58,8 +59,8 @@ export default async function Topics() {
                 </p>
             </section>
 
-            <Suspense fallback={<TopicsLoaderOrError isLogged={Boolean(token)} isLoading={true} />}>
-                <TopicData token={token} />
+            <Suspense fallback={<TopicsLoaderOrError isLoading={true} />}>
+                <TopicsData />
             </Suspense>
         </div>
     )

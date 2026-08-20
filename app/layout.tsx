@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import NextTopLoader from "nextjs-toploader";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ThemeContextProvider from "@/context/ThemeContext";
 import ToastProvider from "@/context/ToastContext";
@@ -133,6 +134,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en" suppressHydrationWarning>
             <body className="bg-primary-gradient">
+                {/* Shows a top loading progress bar on next.js route changes and link clicks */}
+                <NextTopLoader
+                    color="var(--color-primary)"
+                    initialPosition={0.08}
+                    crawlSpeed={200}
+                    height={3}
+                    crawl={true}
+                    showSpinner={false}
+                    easing="ease"
+                    speed={200}
+                    shadow="0 0 10px var(--color-primary),0 0 5px var(--color-primary)"
+                />
+
                 <Script
                     id="json-ld-schema"
                     type="application/ld+json"

@@ -18,7 +18,7 @@ export function getTopicsApi({ token }: { token?: string } = {}): Promise<getTop
 export function getTopicQuestionsApi({
     topicId,
     page,
-    size,
+    size = 20,
     token
 }: {
     topicId: string;

@@ -91,7 +91,7 @@ function Modal({ isOpen = false, onClose, children, className = "" }: ModalProps
                 aria-modal="true"
                 aria-labelledby="modal-header"
                 aria-describedby="modal-body"
-                className={`flex flex-col p-4 bg-secondary text-secondary-content rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:w-auto md:min-w-112 max-h-full ${className}`}
+                className={`flex flex-col p-4 bg-secondary text-secondary-content rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:w-auto md:min-w-112 max-h-[85dvh] ${className}`}
             >
                 {children}
             </div>

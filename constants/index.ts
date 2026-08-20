@@ -14,3 +14,5 @@ export const COOKIES = {
 } as const;
 
 export const REACT_QUERY_OFFLINE_CACHE = "MNGO_REACT_QUERY_OFFLINE_CACHE";
+
+export const NAVBAR_HEIGHT = 52;

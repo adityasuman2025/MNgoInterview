@@ -8,6 +8,7 @@ import { useTheme, THEMES } from "@/context/ThemeContext";
 import { useLogin } from "@/context/LoginContext";
 import { ROUTES } from "@/constants/routes";
 import { APP_NAME } from "@/constants/browserTabTitle";
+import { NAVBAR_HEIGHT } from "@/constants";
 import Button, { BUTTON_VARIANTS } from "@/components/shared/Button";
 import Dropdown from "@/components/shared/Dropdown";
 import { getTopicDetailsFromUrlParams } from "@/utils/topics";
@@ -21,7 +22,7 @@ export default function Navbar() {
 
     return (
         <header className="sticky top-0 z-5 w-full bg-secondary/30 text-secondary-content backdrop-blur-lg transition-colors">
-            <div className="mx-auto flex h-14 items-center justify-between px-4 md:px-8">
+            <div className="mx-auto flex items-center justify-between px-4 md:px-8" style={{ height: NAVBAR_HEIGHT }}>
                 <div className="flex items-center gap-2">
                     <Link href={ROUTES.HOME} className="flex items-center gap-1.5">
                         <Image
