@@ -15,7 +15,7 @@ function ContinueLearningCard({ topic }: ContinueLearningCardProps) {
 
     return (
         <Link
-            href={ROUTES.TOPIC(topic._id)}
+            href={ROUTES.TOPIC(topic)}
             className="group border border-ternary rounded-xl p-4 flex items-center justify-between gap-4 bg-secondary/60 hover:border-primary/50 text-secondary-content transition-all duration-200"
         >
             <div className="flex items-center gap-3.5 min-w-0">

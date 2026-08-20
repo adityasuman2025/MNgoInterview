@@ -3,7 +3,6 @@ import Cookies from "js-cookie";
 import { del } from "idb-keyval";
 import { REACT_QUERY_OFFLINE_CACHE } from "@/constants";
 
-
 export function generateId(): string {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
 
@@ -23,4 +22,17 @@ export async function logout(tokenKey: string, queryClient?: QueryClient) {
 
         window.location.href = "/";
     }
+}
+
+export function toSentenceCase(arr: string[]) {
+    return arr
+        .map((word) => {
+            if (!word) return "";
+            return word[0].toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(" ");
+}
+
+export function isValidMongoId(id: string): boolean {
+    return /^[0-9a-fA-F]{24}$/.test(id);
 }

@@ -1,14 +1,13 @@
 import { Suspense } from "react";
 import { type Metadata } from "next";
-import { cookies } from "next/headers";
 import { Sparkles } from "lucide-react";
-import { QueryClient, HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import TopicsPage from "@/components/topics/TopicsPage";
 import TopicsLoaderOrError from "@/components/topics/TopicsLoaderOrError";
 import { getTopicsApi } from "@/apis/topic";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
-import { COOKIES } from "@/constants";
 import { TOPICS_QUERY_KEY } from "@/constants/reactQueryKeys";
+import { getTokenFromServerCookies, createServerQueryClient } from "@/utils/server";
 
 export const metadata: Metadata = {
     title: BROWSER_TAB_TITLE.TOPICS,
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
 */
 
 async function TopicData({ token }: { token?: string }) {
-    const queryClient = new QueryClient();
+    const queryClient = createServerQueryClient();
     await queryClient.prefetchQuery({ queryFn: () => getTopicsApi({ token }), queryKey: [TOPICS_QUERY_KEY] });
 
     return (
@@ -41,8 +40,7 @@ async function TopicData({ token }: { token?: string }) {
 
 // calling get topics api on server so that topics page can be rendered server side (better SEO & light client-side bundle)
 export default async function Topics() {
-    const Cookies = await cookies();
-    const token = Cookies.get(COOKIES.USER_TOKEN)?.value;
+    const token = await getTokenFromServerCookies();
 
     return (
         <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col gap-2">

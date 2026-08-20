@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ThemeContextProvider from "@/context/ThemeContext";
 import ToastProvider from "@/context/ToastContext";
@@ -132,7 +133,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en" suppressHydrationWarning>
             <body className="bg-primary-gradient">
-                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+                <Script
+                    id="json-ld-schema"
+                    type="application/ld+json"
+                    strategy="beforeInteractive"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
 
                 <ThemeContextProvider>
                     <ReactQueryProvider>

@@ -44,9 +44,11 @@ export default function LoginContextProvider({ children }: LoginContextProviderP
         if (!token) return;
 
         Cookies.set(COOKIES.USER_TOKEN, token);
-        await queryClient.resetQueries(); // clearing react-query cache
 
         if (userData) queryClient.setQueryData([USER_QUERY_KEY], { data: { user: userData } }); // caching the user details using react-query
+
+        // 2. reset other queries except for user details
+        await queryClient.resetQueries({ predicate: (query) => query.queryKey[0] !== USER_QUERY_KEY });
     }, [queryClient]);
 
     const logoutUser = useCallback(() => {

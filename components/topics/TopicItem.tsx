@@ -12,7 +12,7 @@ interface TopicItemProps {
 function TopicItem({ topic }: TopicItemProps) {
     return (
         <Link
-            href={ROUTES.TOPIC(topic._id)}
+            href={ROUTES.TOPIC(topic)}
             className="group border border-ternary rounded-lg bg-secondary/30 text-secondary-content p-4 flex items-center gap-5 hover:border-primary/50 transition-colors"
         >
             <div className="w-10 h-10 bg-base-3 border border-ternary rounded-md flex items-center justify-center">

@@ -37,3 +37,15 @@ export function adminGoogleAuthApi(data: { idToken: string }): Promise<AuthRespo
         authRequired: false,
     });
 }
+
+export function clearRedisCacheApi(params?: { key?: string; pattern?: string }) {
+    const query = new URLSearchParams();
+    if (params?.key) query.append("key", params.key);
+    if (params?.pattern) query.append("pattern", params.pattern);
+    const queryString = query.toString() ? `?${query.toString()}` : "";
+
+    return interviewApiClient({
+        path: `/admin/clear-redis-cache${queryString}`,
+        method: API_METHODS.DELETE,
+    });
+}

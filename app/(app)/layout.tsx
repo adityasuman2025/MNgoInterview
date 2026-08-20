@@ -1,16 +1,14 @@
-import { cookies } from "next/headers";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import Navbar from "@/components/shared/Navbar";
 import LoginContextProvider from "@/context/LoginContext";
-import { COOKIES } from "@/constants";
 import { getUserDetailsApi } from "@/apis/user";
 import { USER_QUERY_KEY } from "@/constants/reactQueryKeys";
+import { getTokenFromServerCookies, createServerQueryClient } from "@/utils/server";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-    const queryClient = new QueryClient();
+    const queryClient = createServerQueryClient();
+    const token = await getTokenFromServerCookies();
 
-    const cookiesStore = await cookies()
-    const token = cookiesStore.get(COOKIES.USER_TOKEN)?.value;
     if (token) {
         await queryClient.prefetchQuery({ queryKey: [USER_QUERY_KEY], queryFn: () => getUserDetailsApi({ token }) }); // logged user details will be fetched on server so the client (frontend) always has the logged user details
     }

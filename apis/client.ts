@@ -50,7 +50,9 @@ export default function createApiClient({ baseUrl, tokenKey }: ApiClientOptions)
         if (!resp.ok) {
             if (resp.status === 401 && authRequired) return logout(tokenKey); // when api route does not require authentication -> then no need of loging out user
 
-            throw new Error(json?.message || `Request failed with status ${resp.status}`);
+            const error = new Error(json?.message || `Request failed with status ${resp.status}`) as Error & { status?: number };
+            error.status = resp.status;
+            throw error;
         }
 
         return json;
