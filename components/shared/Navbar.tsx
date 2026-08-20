@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { Sun, Moon, User, LogOut } from "lucide-react";
 import { useTheme, THEMES } from "@/context/ThemeContext";
 import { useLogin } from "@/context/LoginContext";
@@ -9,25 +10,38 @@ import { ROUTES } from "@/constants/routes";
 import { APP_NAME } from "@/constants/browserTabTitle";
 import Button, { BUTTON_VARIANTS } from "@/components/shared/Button";
 import Dropdown from "@/components/shared/Dropdown";
+import { getTopicDetailsFromUrlParams } from "@/utils/topics";
 
 export default function Navbar() {
     const { toogleTheme, theme, mounted } = useTheme();
     const { user, isLogged, toogleModal, logoutUser } = useLogin();
 
+    const params = useParams();
+    const { topicName } = params ? getTopicDetailsFromUrlParams(params?.topicData as string) : {};
+
     return (
-        <header className="sticky top-0 z-5 w-full  bg-secondary/30 text-secondary-content backdrop-blur-lg transition-colors">
-            <div className="max-w-7xl mx-auto flex h-14 items-center justify-between px-4 md:px-8">
-                <Link href={ROUTES.HOME} className="flex items-center gap-2.5">
-                    <Image
-                        src="/xxxs.png"
-                        alt={APP_NAME}
-                        width={28}
-                        height={28}
-                        className="object-contain"
-                        priority
-                    />
-                    <span className="text-base font-semibold">{APP_NAME}</span>
-                </Link>
+        <header className="sticky top-0 z-5 w-full bg-secondary/30 text-secondary-content backdrop-blur-lg transition-colors">
+            <div className="mx-auto flex h-14 items-center justify-between px-4 md:px-8">
+                <div className="flex items-center gap-2">
+                    <Link href={ROUTES.HOME} className="flex items-center gap-1.5">
+                        <Image
+                            src="/xxxs.png"
+                            alt={APP_NAME}
+                            width={25}
+                            height={25}
+                            className="object-contain"
+                            priority
+                        />
+                        <span className={`text-sm font-semibold whitespace-nowrap ${topicName ? "hidden sm:inline" : "inline"}`}>{APP_NAME}</span>
+                    </Link>
+
+                    {topicName && (
+                        <div className="flex items-center gap-1.5 text-xs sm:text-secondary-content/60">
+                            <span className="hidden sm:inline">/</span>
+                            <span className="truncate max-w-xs">{topicName}</span>
+                        </div>
+                    )}
+                </div>
 
                 <div className="flex items-center gap-2">
                     <Button

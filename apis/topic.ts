@@ -15,9 +15,24 @@ export function getTopicsApi({ token }: { token?: string } = {}): Promise<getTop
     });
 }
 
-export function getTopicQuestionsApi({ topicId, token }: { topicId: string, token?: string }): Promise<getTopicQuestionsApiResp> {
+export function getTopicQuestionsApi({
+    topicId,
+    page,
+    size,
+    token
+}: {
+    topicId: string;
+    page?: number;
+    size?: number;
+    token?: string;
+}): Promise<getTopicQuestionsApiResp> {
+    const query = new URLSearchParams();
+    if (page) query.append("page", page.toString());
+    if (size) query.append("size", size.toString());
+    const queryString = query.toString() ? `?${query.toString()}` : "";
+
     return interviewApiClient({
-        path: `/topics/${topicId}/questions`,
+        path: `/topics/${topicId}/questions${queryString}`,
         authRequired: false,
         token,
     });

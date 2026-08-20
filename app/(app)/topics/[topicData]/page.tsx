@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import ModeProvider from "@/context/ModeContext";
+import TopicSubNavbar from "@/components/topics/TopicSubNavbar";
 import { getTopicQuestionsApi } from "@/apis/topic";
 import { getTopicDetailsFromUrlParams } from "@/utils/topics";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
@@ -24,10 +26,11 @@ export async function generateMetadata({ params }: TopicPageProps): Promise<Meta
 export default async function TopicPage({ params }: TopicPageProps) {
     const { topicData } = await params;
     const { topicId } = getTopicDetailsFromUrlParams(topicData);
+    if (!topicId) return notFound();
+
     const token = await getTokenFromServerCookies();
 
     const queryClient = createServerQueryClient();
-
     try {
         await queryClient.fetchQuery({
             queryFn: () => getTopicQuestionsApi({ topicId, token }),
@@ -35,14 +38,19 @@ export default async function TopicPage({ params }: TopicPageProps) {
         });
     } catch (err: unknown) {
         const error = err as { status?: number; message?: string };
-        if (error?.status === 404) notFound();
+        if (error?.status === 404) return notFound();
     }
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <section>
-                {topicId}
-            </section>
+            <ModeProvider>
+                <div className="flex flex-col flex-1 w-full">
+                    <TopicSubNavbar />
+                    <section className="flex-1 p-4 md:p-8">
+                        {topicId}
+                    </section>
+                </div>
+            </ModeProvider>
         </HydrationBoundary>
     );
 }

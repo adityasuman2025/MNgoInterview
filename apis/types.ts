@@ -22,12 +22,25 @@ export interface getTopicsApiResp {
     data: TopicType[];
 }
 
+export interface PaginationType {
+    page: number;
+    size: number;
+    totalItems: number;
+    totalPages: number;
+    hasMore: boolean;
+}
+
 export interface TopicQuestionType {
     _id: string;
     slug: string;
     title: string;
     solution: string[];
+    isMarkedComplete?: boolean;
 }
+
 export interface getTopicQuestionsApiResp {
-    data: TopicQuestionType[]
+    data: {
+        questions: TopicQuestionType[];
+        pagination: PaginationType;
+    };
 }

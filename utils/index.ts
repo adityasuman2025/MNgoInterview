@@ -36,3 +36,9 @@ export function toSentenceCase(arr: string[]) {
 export function isValidMongoId(id: string): boolean {
     return /^[0-9a-fA-F]{24}$/.test(id);
 }
+
+export function formatTime(totalSeconds: number = 0): string {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}

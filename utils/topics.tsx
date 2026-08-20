@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { TOPIC_ICON_CONFIG, ICON_BASE_CLASSNAME } from "@/constants/topics";
 import { toSentenceCase, isValidMongoId } from "@/utils";
 
@@ -16,11 +15,13 @@ export function getTopicIcon(topicName: string) {
     return <FallbackIcon className={`${ICON_BASE_CLASSNAME} ${fallback.color}`} />;
 }
 
-export function getTopicDetailsFromUrlParams(topicData: string) {
-    const topicDataArr = decodeURIComponent(topicData).split("-");
+export function getTopicDetailsFromUrlParams(topicData: string): Record<string, string> {
+    if (!topicData) return {};
+
+    const topicDataArr = decodeURIComponent(topicData)?.split("-");
     const topicId = topicDataArr.pop();
 
-    if (!topicId || !isValidMongoId(topicId)) return notFound();
+    if (!topicId || !isValidMongoId(topicId)) return {};
 
     return { topicSlug: topicDataArr.join("-"), topicName: toSentenceCase(topicDataArr), topicId };
 }
