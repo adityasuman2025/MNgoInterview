@@ -88,7 +88,7 @@ function QuestionSolutionPanel({
                     errorMessage={errorMessage}
                     skeletonElement={SOLUTION_BODY_SKELETON}
                 >
-                    {solutionVis ? <SolutionRenderer solution={selectedQuestion?.solution} /> : <WriteAnswer question={selectedQuestion} />}
+                    {solutionVis ? <SolutionRenderer solution={selectedQuestion?.solution} /> : isLogged && isQuizMode ? <WriteAnswer question={selectedQuestion} /> : null}
                 </LoaderOrError>
             </div>
         </section>

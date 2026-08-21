@@ -12,13 +12,17 @@ export function generateId(): string {
     return `${timestamp}-${random1}-${random2}`;
 }
 
-export async function logout(tokenKey: string, queryClient?: QueryClient) {
+export async function logout(tokenKey?: string, queryClient?: QueryClient) {
     if (typeof window !== "undefined") {
-        Cookies.remove(tokenKey); // removing login token cookie
+        // clearing all cookies
+        const allCookies = Cookies.get();
+        Object.keys(allCookies).forEach((cookieName) => {
+            Cookies.remove(cookieName);
+        });
 
         if (queryClient) queryClient.clear(); // clearing react-query cache
 
-        await del(REACT_QUERY_OFFLINE_CACHE).catch(console.error); // clearing cache stored in index db
+        await del(REACT_QUERY_OFFLINE_CACHE).catch(console.error); // clearing cache stored in indexedDB
 
         window.location.href = "/";
     }
