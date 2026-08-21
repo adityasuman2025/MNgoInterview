@@ -1,19 +1,15 @@
 import Link from "next/link";
-import { type Metadata } from "next";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 import { ROUTES } from "@/constants/routes";
 import { MARKETING_FEATURES, MARKETING_STATS } from "@/constants/marketing";
 import Button from "@/components/shared/Button";
 import { Sparkles, ArrowRight, Code2 } from "lucide-react";
 
-export const metadata: Metadata = {
-    title: BROWSER_TAB_TITLE.HOME,
-    robots: { index: true, follow: true },
-};
-
 export default function Home() {
     return (
         <div className="flex-1 w-full flex flex-col">
+            <title>{BROWSER_TAB_TITLE.HOME}</title>
+            <meta name="robots" content="index, follow" />
             {/* Hero Section */}
             <section className="min-h-screen flex items-center relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center gap-6">

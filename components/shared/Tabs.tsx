@@ -1,4 +1,4 @@
-import { createContext, memo, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 interface TabsContextType {
     activeTabId: string,
@@ -101,8 +101,8 @@ function Panel({ className, children, tabId }: BaseProps & { tabId: string }) {
     )
 }
 
-Tabs.List = memo(List);
-Tabs.Tab = memo(Tab);
-Tabs.Panel = memo(Panel);
+Tabs.List = List;
+Tabs.Tab = Tab;
+Tabs.Panel = Panel;
 
 export default Tabs;

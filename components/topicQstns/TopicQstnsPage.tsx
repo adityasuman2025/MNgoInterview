@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import QuestionItem from "@/components/topicQstns/QuestionItem";
-import SolutionRenderer from "@/components/topicQstns/SolutionRenderer";
 import SolutionModal from "@/components/topicQstns/SolutionModal";
 import TopicQstnsLoaderOrError from "@/components/topicQstns/TopicQstnsLoaderOrError";
 import InfiniteScroll from "@/components/shared/InfiniteScroll";
 import SkeletonLoader from "@/components/shared/SkeletonLoader";
-import { useLogin } from "@/context/LoginContext";
 import { getTopicQuestionsApi } from "@/apis/topic";
 import { TOPIC_QUESTIONS_QUERY_KEY } from "@/constants/reactQueryKeys";
 
@@ -16,13 +14,12 @@ const BOTTOM_SKELETON_LOADER = (
     <div className="flex flex-col gap-1.5 pt-1.5">
         <SkeletonLoader
             length={3}
-            className="h-11 w-full rounded-xl border border-ternary bg-secondary/40 animate-pulse"
+            className="h-11 w-full rounded-xl border border-ternary"
         />
     </div>
 );
 
 export default function TopicQstnsPage({ topicId }: { topicId: string }) {
-    const { isLogged } = useLogin();
     const {
         data,
         isLoading,
@@ -65,6 +62,26 @@ export default function TopicQstnsPage({ topicId }: { topicId: string }) {
         setIsMobileModalOpen(false);
     }, []);
 
+    const questionListContent = useMemo(() => (
+        <InfiniteScroll
+            hasMore={Boolean(hasNextPage)}
+            isLoadingMore={isFetchingNextPage}
+            onLoadMore={fetchNextPage}
+            className="flex flex-col gap-1.5"
+            loader={BOTTOM_SKELETON_LOADER}
+        >
+            {questions.map((question, idx) => (
+                <QuestionItem
+                    key={question._id}
+                    question={question}
+                    index={idx}
+                    isSelected={selectedQuestionIndex === idx}
+                    onSelect={handleSelectQuestion}
+                />
+            ))}
+        </InfiniteScroll>
+    ), [hasNextPage, isFetchingNextPage, fetchNextPage, questions, selectedQuestionIndex, handleSelectQuestion]);
+
     return (
         <>
             <TopicQstnsLoaderOrError
@@ -72,30 +89,12 @@ export default function TopicQstnsPage({ topicId }: { topicId: string }) {
                 isError={isError}
                 errorMessage={error instanceof Error ? error.message : "Failed to load questions."}
                 totalCountText={`QUESTIONS (${questions.length} / ${totalItems})`}
-                selectedTitle={selectedQuestion?.title}
-                solutionContent={selectedQuestion ? <SolutionRenderer solution={selectedQuestion.solution} /> : null}
+                selectedQuestion={selectedQuestion}
             >
-                <InfiniteScroll
-                    hasMore={Boolean(hasNextPage)}
-                    isLoadingMore={isFetchingNextPage}
-                    onLoadMore={fetchNextPage}
-                    className="flex flex-col gap-1.5"
-                    loader={BOTTOM_SKELETON_LOADER}
-                >
-                    {questions.map((question, idx) => (
-                        <QuestionItem
-                            key={question._id}
-                            question={question}
-                            index={idx}
-                            isLogged={isLogged}
-                            isSelected={selectedQuestionIndex === idx}
-                            onSelect={handleSelectQuestion}
-                        />
-                    ))}
-                </InfiniteScroll>
+                {questionListContent}
             </TopicQstnsLoaderOrError>
 
-            <SolutionModal isOpen={isMobileModalOpen} question={selectedQuestion} onClose={handleCloseMobileModal} />
+            <SolutionModal isOpen={isMobileModalOpen} selectedQuestion={selectedQuestion} onClose={handleCloseMobileModal} />
         </>
     );
 }

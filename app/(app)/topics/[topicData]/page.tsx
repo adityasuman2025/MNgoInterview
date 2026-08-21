@@ -1,34 +1,27 @@
-import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import ModeProvider from "@/context/ModeContext";
+import ModeProvider, { MODES, type ModeTypes } from "@/context/ModeContext";
 import TopicSubNavbar from "@/components/topicQstns/TopicSubNavbar";
 import TopicQstnsPage from "@/components/topicQstns/TopicQstnsPage";
 import { getTopicQuestionsApi } from "@/apis/topic";
 import { getTopicDetailsFromUrlParams } from "@/utils/topics";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 import { TOPIC_QUESTIONS_QUERY_KEY } from "@/constants/reactQueryKeys";
-import { getTokenFromServerCookies, createServerQueryClient } from "@/utils/server";
+import { getTokenFromServerCookies, createServerQueryClient, getServerCookie } from "@/utils/server";
 import { Suspense } from "react";
-import TopicQstnsLoaderOrError from "@/components/topicQstns/TopicQstnsLoaderOrError";
-import { NAVBAR_HEIGHT } from "@/constants";
+import TopicQstnsSkeleton from "@/components/topicQstns/TopicQstnsSkeleton";
+import { NAVBAR_HEIGHT, COOKIES } from "@/constants";
 
 interface TopicProps {
     params: Promise<{ topicData: string }>;
 }
-
-export async function generateMetadata({ params }: TopicProps): Promise<Metadata> {
+async function TopicData({ params }: { params: Promise<{ topicData: string }> }) {
     const { topicData } = await params;
-    const { topicName } = getTopicDetailsFromUrlParams(topicData);
+    const { topicName, topicId } = getTopicDetailsFromUrlParams(topicData);
+    if (!topicId) return notFound();
 
-    return {
-        title: BROWSER_TAB_TITLE.TOPIC_QUESTIONS(topicName),
-        robots: { index: true, follow: true },
-    };
-}
-
-async function TopicData({ topicId }: { topicId: string }) {
     const token = await getTokenFromServerCookies();
+    const initialMode = await getServerCookie<ModeTypes>(COOKIES.MODE, MODES.LEARN);
 
     const queryClient = createServerQueryClient();
     try {
@@ -43,25 +36,29 @@ async function TopicData({ topicId }: { topicId: string }) {
     }
 
     return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <TopicQstnsPage topicId={topicId} />
-        </HydrationBoundary>
+        <ModeProvider initialMode={initialMode}>
+            <title>{BROWSER_TAB_TITLE.TOPIC_QUESTIONS(topicName)}</title>
+            <meta name="robots" content="index, follow" />
+
+            <div className="flex flex-col flex-1 w-full min-h-0">
+                <TopicSubNavbar />
+                <HydrationBoundary state={dehydrate(queryClient)}>
+                    <TopicQstnsPage topicId={topicId} />
+                </HydrationBoundary>
+            </div>
+        </ModeProvider>
     );
 }
 
-export default async function Topic({ params }: TopicProps) {
-    const { topicData } = await params;
-    const { topicId } = getTopicDetailsFromUrlParams(topicData);
-    if (!topicId) return notFound();
-
+export default function Topic({ params }: TopicProps) {
     return (
-        <ModeProvider>
-            <div className="flex flex-col flex-1 w-full" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
-                <TopicSubNavbar />
-                <Suspense fallback={<TopicQstnsLoaderOrError isLoading={true} />}>
-                    <TopicData topicId={topicId} />
-                </Suspense>
-            </div>
-        </ModeProvider>
+        <div
+            className="flex flex-col w-full overflow-hidden"
+            style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
+        >
+            <Suspense fallback={<TopicQstnsSkeleton />}>
+                <TopicData params={params} />
+            </Suspense>
+        </div>
     );
 }

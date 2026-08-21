@@ -17,7 +17,7 @@ export default function TopicsPage() {
 
     const continueLearningTopics = useMemo(() => {
         if (!isLogged) return [];
-        return [...topics].sort((a, b) => (b.completedQuestions || 0) - (a.completedQuestions || 0)).slice(0, 2);
+        return [...topics].sort((a, b) => (b.completedQuestions ?? 0) - (a.completedQuestions ?? 0)).slice(0, 2);
     }, [isLogged, topics]);
 
     return (

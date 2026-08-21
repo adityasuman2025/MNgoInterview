@@ -11,6 +11,7 @@ export const BACKGROUND_COLOR = {
 export const COOKIES = {
     ADMIN_TOKEN: "admin-token",
     USER_TOKEN: "token",
+    MODE: "mode",
 } as const;
 
 export const REACT_QUERY_OFFLINE_CACHE = "MNGO_REACT_QUERY_OFFLINE_CACHE";

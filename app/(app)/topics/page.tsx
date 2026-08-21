@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { type Metadata } from "next";
 import { Sparkles } from "lucide-react";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import TopicsPage from "@/components/topics/TopicsPage";
@@ -8,11 +7,6 @@ import { getTopicsApi } from "@/apis/topic";
 import { BROWSER_TAB_TITLE } from "@/constants/browserTabTitle";
 import { TOPICS_QUERY_KEY } from "@/constants/reactQueryKeys";
 import { getTokenFromServerCookies, createServerQueryClient } from "@/utils/server";
-
-export const metadata: Metadata = {
-    title: BROWSER_TAB_TITLE.TOPICS,
-    robots: { index: true, follow: true },
-};
 
 /*
     [Server]
@@ -35,6 +29,8 @@ async function TopicsData() {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
+            <title>{BROWSER_TAB_TITLE.TOPICS}</title>
+            <meta name="robots" content="index, follow" />
             <TopicsPage />
         </HydrationBoundary>
     )

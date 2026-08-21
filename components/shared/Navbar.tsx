@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import { Sun, Moon, User, LogOut } from "lucide-react";
 import { useTheme, THEMES } from "@/context/ThemeContext";
 import { useLogin } from "@/context/LoginContext";
@@ -11,14 +10,12 @@ import { APP_NAME } from "@/constants/browserTabTitle";
 import { NAVBAR_HEIGHT } from "@/constants";
 import Button, { BUTTON_VARIANTS } from "@/components/shared/Button";
 import Dropdown from "@/components/shared/Dropdown";
-import { getTopicDetailsFromUrlParams } from "@/utils/topics";
+import useTopicDataFromUrl from "@/hooks/useTopicDataFromUrl";
 
 export default function Navbar() {
     const { toogleTheme, theme, mounted } = useTheme();
     const { user, isLogged, toogleModal, logoutUser } = useLogin();
-
-    const params = useParams();
-    const { topicName } = params ? getTopicDetailsFromUrlParams(params?.topicData as string) : {};
+    const { topicName } = useTopicDataFromUrl();
 
     return (
         <header className="sticky top-0 z-5 w-full bg-secondary/30 text-secondary-content backdrop-blur-lg transition-colors">
@@ -39,7 +36,9 @@ export default function Navbar() {
                     {topicName && (
                         <div className="flex items-center gap-1.5 text-xs sm:text-secondary-content/60">
                             <span className="hidden sm:inline">/</span>
-                            <span className="truncate max-w-xs">{topicName}</span>
+                            <Link href={ROUTES.TOPICS} className="truncate max-w-xs">
+                                <span >{topicName}</span>
+                            </Link>
                         </div>
                     )}
                 </div>

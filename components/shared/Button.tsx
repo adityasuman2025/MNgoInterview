@@ -18,6 +18,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 interface ButtonProps extends ComponentProps<"button"> {
     variant?: ButtonVariant;
     loading?: boolean;
+    loaderClassName?: string;
 }
 function Button({
     variant = BUTTON_VARIANTS.PRIMARY,
@@ -26,6 +27,7 @@ function Button({
     type = "submit",
     children,
     className = "",
+    loaderClassName = "",
     ...props
 }: ButtonProps) {
     const isDisabled = Boolean(disabled || loading);
@@ -38,7 +40,7 @@ function Button({
             className={`w-fit h-fit rounded-lg px-4 py-2 flex text-sm items-center justify-center gap-2 font-medium cursor-pointer transition-colors hover:brightness-90 active:brightness-75 disabled:opacity-40 disabled:pointer-events-none ${variantStyles[variant]} ${className}`}
             {...props}
         >
-            {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+            {loading && <Loader2 className={`w-5 h-5 animate-spin ${loaderClassName}`} />}
             <>{children}</>
         </button>
     );

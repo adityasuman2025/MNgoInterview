@@ -3,9 +3,9 @@
 import { memo, useMemo } from "react";
 
 interface SolutionRendererProps {
-    solution: string[] | string;
+    solution?: string[] | string;
 }
-function SolutionRenderer({ solution }: SolutionRendererProps) {
+function SolutionRenderer({ solution = [] }: SolutionRendererProps) {
     const processedHtml = useMemo(() => {
         let raw = Array.isArray(solution) ? solution.join("") : solution || "";
         if (!raw) return "";
@@ -19,7 +19,7 @@ function SolutionRenderer({ solution }: SolutionRendererProps) {
 
     return (
         <div
-            className="solution-content p-6 bg-secondary rounded-2xl border border-ternary shadow-xs transition-colors"
+            className="solution-content"
             dangerouslySetInnerHTML={{ __html: processedHtml }}
         />
     );

@@ -13,7 +13,12 @@ export function createServerQueryClient() {
     });
 }
 
-export async function getTokenFromServerCookies(cookieName: string = COOKIES.USER_TOKEN): Promise<string | undefined> {
+export async function getServerCookie<T extends string = string>(cookieName: string, defaultValue?: T): Promise<T | undefined> {
     const cookieStore = await cookies();
-    return cookieStore.get(cookieName)?.value;
+    const val = cookieStore.get(cookieName)?.value as T | undefined;
+    return val ?? defaultValue;
+}
+
+export async function getTokenFromServerCookies(cookieName: string = COOKIES.USER_TOKEN): Promise<string | undefined> {
+    return getServerCookie(cookieName);
 }

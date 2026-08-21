@@ -1,4 +1,4 @@
-import { type MouseEvent, type KeyboardEvent, useEffect, useRef, ReactNode, memo } from "react";
+import { type MouseEvent, type KeyboardEvent, useEffect, useRef, ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalSubComponentProps {
@@ -91,7 +91,7 @@ function Modal({ isOpen = false, onClose, children, className = "" }: ModalProps
                 aria-modal="true"
                 aria-labelledby="modal-header"
                 aria-describedby="modal-body"
-                className={`flex flex-col p-4 bg-secondary text-secondary-content rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:w-auto md:min-w-112 max-h-[85dvh] ${className}`}
+                className={`flex flex-col p-4 bg-secondary text-secondary-content rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:w-auto md:min-w-112 max-h-[85dvh] overflow-hidden ${className}`}
             >
                 {children}
             </div>
@@ -124,8 +124,8 @@ function Footer({ children, className = "" }: ModalSubComponentProps) {
     );
 }
 
-Modal.Header = memo(Header);
-Modal.Body = memo(Body);
-Modal.Footer = memo(Footer);
+Modal.Header = Header;
+Modal.Body = Body;
+Modal.Footer = Footer;
 
 export default Modal;

@@ -1,19 +1,27 @@
 "use client";
 
 import { Timer, BookOpen, Brain, RotateCcw } from "lucide-react";
-import { useMode, MODES } from "@/context/ModeContext";
+import { useMode } from "@/context/ModeContext";
 import useTimer from "@/hooks/useTimer";
 import Button, { BUTTON_VARIANTS } from "@/components/shared/Button";
+import { useLogin } from "@/context/LoginContext";
+import { useCallback } from "react";
 
 function TimerControls() {
+    const { isLogged, toogleModal } = useLogin();
     const { seconds, isTimerRunning, formattedTime, toggleTimer, resetTimer } = useTimer();
+
+    const handleToggleTimmer = useCallback(() => {
+        if (isLogged) toggleTimer();
+        else toogleModal();
+    }, [isLogged, toggleTimer, toogleModal]);
 
     return (
         <div className="flex items-center gap-2">
             <Button
                 type="button"
                 variant={BUTTON_VARIANTS.SECONDARY}
-                onClick={toggleTimer}
+                onClick={handleToggleTimmer}
                 className="!py-1 !px-2.5 !text-2xs font-medium flex items-center gap-1.5"
             >
                 <Timer className="w-2.5 h-2.5" />
@@ -39,24 +47,30 @@ function TimerControls() {
 }
 
 function ModeSwitchButton() {
-    const { mode, toggleMode } = useMode();
+    const { isQuizMode, toggleMode } = useMode();
+    const { isLogged, toogleModal } = useLogin();
+
+    const handleToggleMode = useCallback(() => {
+        if (isLogged) toggleMode();
+        else toogleModal();
+    }, [isLogged, toggleMode, toogleModal]);
 
     return (
         <Button
             type="button"
             variant={BUTTON_VARIANTS.SECONDARY}
-            onClick={toggleMode}
+            onClick={handleToggleMode}
             className="!py-1 !px-2.5 !text-2xs font-medium flex items-center gap-1.5"
         >
-            {mode === MODES.QUIZ ? (
+            {isQuizMode ? (
                 <>
                     <Brain className="w-2.5 h-2.5 text-primary" />
-                    <span>Quiz Mode</span>
+                    <span>Switch to Learn Mode</span>
                 </>
             ) : (
                 <>
                     <BookOpen className="w-2.5 h-2.5 text-primary" />
-                    <span>Learn Mode</span>
+                    <span>Switch to Quiz Mode</span>
                 </>
             )}
         </Button>

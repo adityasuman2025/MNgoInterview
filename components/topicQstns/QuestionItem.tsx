@@ -1,21 +1,25 @@
 import { CheckCircle2, Circle } from "lucide-react";
 import { memo } from "react";
+import { useLogin } from "@/context/LoginContext";
+import { useMode } from "@/context/ModeContext";
 import type { TopicQuestionType } from "@/apis/types";
 
 interface QuestionItemProps {
     question: TopicQuestionType;
     index: number;
-    isLogged?: boolean;
     isSelected?: boolean;
     onSelect: (index: number) => void;
 }
 function QuestionItem({
     question,
     index,
-    isLogged = false,
     isSelected = false,
     onSelect,
 }: QuestionItemProps) {
+    const { isLogged } = useLogin();
+    const { isQuizMode } = useMode();
+    const showStatus = isLogged && isQuizMode;
+
     return (
         <button
             type="button"
@@ -27,7 +31,7 @@ function QuestionItem({
             title={question?.title}
         >
             <div className="flex items-center gap-1.5 pt-0.5 shrink-0">
-                {isLogged && (
+                {showStatus && (
                     question?.isMarkedComplete ? (
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                     ) : (

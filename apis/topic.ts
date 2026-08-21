@@ -1,6 +1,7 @@
-import createApiClient from "@/apis/client";
+import createApiClient, { API_METHODS } from "@/apis/client";
 import { COOKIES } from "@/constants";
 import type { getTopicsApiResp, getTopicQuestionsApiResp } from "@/apis/types";
+import { METHODS } from "http";
 
 const interviewApiClient = createApiClient({
     baseUrl: process.env.NEXT_PUBLIC_INTERVIEW_API_BASE_URL || "",
@@ -36,4 +37,26 @@ export function getTopicQuestionsApi({
         authRequired: false,
         token,
     });
+}
+
+export function getAnswerOfAQuestionForAUserApi({ topicId, questionId }: { topicId: string, questionId: string }) {
+    return interviewApiClient({
+        path: `/topics/${topicId}/questions/${questionId}/answer`
+    });
+}
+
+export function saveAnswerOfAQuestionForAUserApi({ topicId, questionId, answer }: { topicId: string, questionId: string, answer: string }) {
+    return interviewApiClient({
+        path: `/topics/${topicId}/questions/${questionId}/progress`,
+        method: API_METHODS.PATCH,
+        body: { answer }
+    })
+}
+
+export function markQuestionDoneApi({ topicId, questionId }: { topicId: string, questionId: string }) {
+    return interviewApiClient({
+        path: `/topics/${topicId}/questions/${questionId}/progress`,
+        method: API_METHODS.PATCH,
+        body: { status: "done" }
+    })
 }

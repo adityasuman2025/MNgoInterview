@@ -1,9 +1,8 @@
 "use client";
 
-import { createContext, ReactNode, useCallback, useContext, useMemo } from "react";
-import useLocalStorage from "@/hooks/useLocalStorage";
-
-const MODE_STORAGE_KEY = "mode";
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import Cookies from "js-cookie";
+import { COOKIES } from "@/constants";
 
 export const MODES = {
     QUIZ: "QUIZ",
@@ -12,24 +11,25 @@ export const MODES = {
 export type ModeTypes = keyof typeof MODES;
 
 interface ModeContextType {
+    isQuizMode: boolean,
     mode: ModeTypes,
     toggleMode: () => void
 }
 const ModeContext = createContext<ModeContextType | null>(null);
 
-export default function ModeProvider({ children }: { children: ReactNode }) {
-    const [mode, setMode] = useLocalStorage<ModeTypes>(MODE_STORAGE_KEY, MODES.LEARN);
+export default function ModeProvider({ initialMode = MODES.LEARN, children }: { initialMode?: ModeTypes; children: ReactNode }) {
+    const [mode, setMode] = useState<ModeTypes>(initialMode);
 
     const toggleMode = useCallback(() => {
-        setMode(prev => prev === MODES.QUIZ ? MODES.LEARN : MODES.QUIZ);
+        setMode((prev) => {
+            const next = prev === MODES.QUIZ ? MODES.LEARN : MODES.QUIZ;
+            Cookies.set(COOKIES.MODE, next, { expires: 365 });
+            return next;
+        });
     }, []);
 
-    const contextValue = useMemo(() => ({ mode, toggleMode }), [mode, toggleMode]);
-    return (
-        <ModeContext.Provider value={contextValue}>
-            {children}
-        </ModeContext.Provider>
-    )
+    const contextValue = useMemo(() => ({ mode, toggleMode, isQuizMode: mode === MODES.QUIZ }), [mode, toggleMode]);
+    return <ModeContext.Provider value={contextValue}>{children}</ModeContext.Provider>;
 }
 
 export function useMode() {
