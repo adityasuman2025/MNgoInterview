@@ -11,7 +11,7 @@ export default function Home() {
             <title>{BROWSER_TAB_TITLE.HOME}</title>
             <meta name="robots" content="index, follow" />
             {/* Hero Section */}
-            <section className="min-h-screen flex items-center relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
+            <section className="min-h-dvh flex items-center relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center gap-6">
                     {/* Badge */}
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-secondary bg-secondary text-xs font-semibold text-secondary-content">
@@ -58,7 +58,7 @@ export default function Home() {
             </section>
 
             {/* Features Section */}
-            <section className="min-h-screen flex items-center py-16 border-t border-secondary bg-secondary">
+            <section className="min-h-dvh flex items-center py-16 border-t border-secondary bg-secondary">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col gap-12">
                     <div className="flex flex-col items-center text-center gap-3 max-w-xl mx-auto">
                         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ternary-content">

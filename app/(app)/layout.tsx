@@ -16,7 +16,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <LoginContextProvider>
-                <main className="min-h-screen flex flex-col">
+                <main className="min-h-dvh flex flex-col">
                     <Navbar />
                     {children}
                 </main>

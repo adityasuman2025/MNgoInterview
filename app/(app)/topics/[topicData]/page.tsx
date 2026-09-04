@@ -54,7 +54,7 @@ export default function Topic({ params }: TopicProps) {
     return (
         <div
             className="flex flex-col w-full overflow-hidden"
-            style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
+            style={{ height: `calc(100dvh - ${NAVBAR_HEIGHT}px)` }}
         >
             <Suspense fallback={<TopicQstnsSkeleton />}>
                 <TopicData params={params} />
